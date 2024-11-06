@@ -1,0 +1,95 @@
+/* *******************modal 공통******************* */
+.modal_overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0, 0, 0, 0.5);
+  z-index: 1055;
+  cursor: pointer;
+}
+.modal_wrap {
+  position: fixed;
+  top: 50%;
+  width: 80%;
+  height: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  background: #fff;
+  border-radius: 15px;
+  z-index: 1059;
+  cursor: auto;
+  /* 큰 사이즈 */
+  &.mo_L {
+    max-width: 800px;
+  }
+  /* 작은 사이즈 */
+  &.mo_S {
+    max-width: 400px;
+    max-height: 500px;
+  }
+}
+.modal_title {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50px;
+  padding: 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--primary-color);
+  border-radius: 0;
+  letter-spacing: -0.8px;
+  z-index: 10;
+  margin-top: -1px;
+  h4 {
+    text-align: center;
+  }
+}
+.modal_body {
+  /* display: flex;
+    align-items: stretch;
+    flex-wrap: wrap; */
+  padding: 70px 20px 20px;
+  width: 100%;
+  height: 100%;
+}
+.close_btn {
+  position: absolute;
+  top: 14px;
+  right: 25px;
+  width: 20px;
+  height: 20px;
+  background: url("@/assets/img/icon_close.png") center center no-repeat;
+  background-size: 100%;
+  text-indent: -9999px;
+  cursor: pointer;
+}
+
+//******************* 각각 modal 설정*******************
+
+// 비밀번호 찾기 모달
+.find_wrap{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    .user_input {
+        width: 100%;
+        justify-content: center;
+        label{
+            width: 70px;
+        }
+        input{
+        background-color: #e7e5e0;
+    }
+    }
+    .confirm_box .confirm_btn{
+        width: 300px;
+    }
+  }
