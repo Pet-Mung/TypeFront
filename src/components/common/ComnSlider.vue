@@ -1,42 +1,30 @@
 <template>
   <div v-if="props.flag == 1">
     <Carousel v-bind="setting" :breakpoints="breakpoints">
-      <Slide class="" v-for="slide in props.sliderData" :key="slide">
+      <Slide class="" v-for="(slide,idx) in transformSliderData" :key="idx">
         <div class="carousel__item">
-          <img
-            :src="imageCheck(slide.image || slide.product_image)"
-            :alt="slide.name"
-            class="slide_img"
-          />
-          <p>{{ slide.name || slide.product_name}}</p>
+          <img :src="imageCheck(slide.image || '')" :alt="slide.name" class="slide_img" />
+          <p>{{ slide.name || slide.product_name }}</p>
           <p class="fs-15 mt-10">{{ slide.count }} 개</p>
         </div>
       </Slide>
       <template #addons>
-        <Navigation v-if="props.sliderData.length > 8" />
+        <Navigation v-if="transformSliderData.length > 8" />
       </template>
     </Carousel>
   </div>
 
+<!-- 여기꺼 배열 바꿔야대 .image로 넣을 수있게 -->
   <div v-if="props.flag == 2" class="slider_area">
-    <Carousel
-      v-bind="settings"
-      :wrapAround="lenChk"
-      :mouseDrag="lenChk"
-      :touchDrag="lenChk"
-    >
+    <Carousel v-bind="settings" :wrapAround="lenChk" :mouseDrag="lenChk" :touchDrag="lenChk">
       <!-- -->
-      <Slide class="" v-for="(slide, idx) in props.sliderData" :key="slide">
+      <Slide class="" v-for="(slide, idx) in transformSliderData" :key="idx">
         <div class="carousel__item">
-          <img
-            :src="imageCheck(slide)"
-            :alt="`상품사진 ${idx}`"
-            class="slide_img"
-          />
+          <img :src="imageCheck(slide.image || '')" :alt="`상품사진 ${idx}`" class="slide_img" />
         </div>
       </Slide>
       <template #addons>
-        <Navigation v-if="props.sliderData?.length > 1" />
+        <Navigation v-if="transformSliderData?.length > 1" />
         <Pagination />
       </template>
     </Carousel>
@@ -44,48 +32,50 @@
 
   <div v-if="props.flag == 3">
     <!-- :style="customStyle(slide.backgroundImage)" style -->
-    <Carousel
-      v-bind="settings"
-      :wrapAround=true
-      :mouseDrag=true
-      :touchDrag=true
-    >
-      <Slide class="" v-for="(slide, idx) in props.sliderData" :key="idx" :style="{padding : 0}">
-        <div class="carousel__item banner__item"  :style="{ backgroundColor: slide.color }">
-          <img
-            :src="slide.backgroundImage"
-            :alt="idx"
-            class="slide_img"
-          />
+    <Carousel v-bind="settings" :wrapAround=true :mouseDrag=true :touchDrag=true>
+      <Slide class="" v-for="(slide, idx) in transformSliderData" :key="idx" :style="{ padding: 0 }">
+        <div class="carousel__item banner__item" :style="{ backgroundColor: slide.color }">
+          <img :src="slide.backgroundImage" :alt="String(idx)" class="slide_img" />
           <!-- <p>{{ slide.title }}</p> -->
           <!-- <p>{{ slide.content }}</p> -->
         </div>
       </Slide>
       <template #addons>
-        <Navigation v-if="props.sliderData.length > 1" />
+        <Navigation v-if="transformSliderData.length > 1" />
       </template>
     </Carousel>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { IImage } from "@/types";
 import { imageCheck } from "@/utils/common";
 import { computed, defineProps } from "vue";
 import { Carousel, Slide, Navigation, Pagination } from "vue3-carousel";
 
-import "vue3-carousel/dist/carousel.css";
-const props = defineProps({
-  sliderData: { type: Array },
-  flag: { type: Number },
-});
 
+import "vue3-carousel/dist/carousel.css";
+const props = defineProps<{
+  sliderData: IImage[];
+  flag: number;
+}>();
+
+
+const transformSliderData = computed<IImage[]>(()=>{
+  return props.sliderData.map((item)=>({
+    ...item,
+    image : item.image || item.product_image || '',
+    name : item.name || item.product_name || 'image',
+    count :item.count || 0
+  }))
+});
 const lenChk = computed(() => {
-  return props.sliderData.length > 1 ? true : false;
+  return transformSliderData.value.length > 1 ? true : false;
 });
 // const customStyle = (bg) =>{
 //   return {'--bg' : bg};
 // }
-console.log(props.sliderData);
+console.log(transformSliderData);
 //mypage slide setting
 const setting = {
   itemsToShow: 3,

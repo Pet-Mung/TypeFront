@@ -1,19 +1,19 @@
 <template>
   <div class="header_wrap">
-    <div class="logo_area" @click="router.push('/')">
-      <h1>CATTUS
+    <div class="logo_area">
+      <h1 @click="router.push('/')">CATTUS
         <img src="@/assets/img/logo.png" alt="logo" />
         </h1>
       
     </div>
-    <NavBar />
+    <Navbar />
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import { useRouter } from 'vue-router';
-import NavBar from './ComnNavbar.vue';
+import Navbar from './ComnNavbar.vue';
 
 const router = useRouter();
 </script>

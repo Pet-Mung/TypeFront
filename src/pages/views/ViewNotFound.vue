@@ -1,13 +1,13 @@
 <template>
   <div class="flex_center no_wrap">
     <img src="@/assets/img/logo.png" alt="logo" />
-    <p class="fb fs-20">The page you are looking for could not be found.</p>
+    <p class="fb fs-20">요청하신 페이지를 찾을 수 없습니다.</p>
     <p>
-      The address may have been entered incorrectly, <br />
-      or the page may have been moved or deleted.<br />
-      Please double-check the URL you entered.
+      주소를 잘못 입력했거나, 페이지가 이동되었거나  <br />
+      삭제되었을 수 있습니다. <br />
+      입력하신 URL을 다시 한 번 확인해 주세요.
     </p>
-    <button @click="router.push('/')">Back to Home</button>
+    <button @click="router.push('/')">홈으로 가기</button>
   </div>
 </template>
 

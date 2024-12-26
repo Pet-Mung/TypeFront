@@ -4,15 +4,15 @@ import userApi from "@/api/apiUser";
 import { RootState } from '@/types/index'
 import { ActionContext } from 'vuex';
 import { ILoginInfo, } from "@/types/user"
-interface Basket {
+export interface Basket {
   id: string;
   productId: string;
+  product_name: string;
   count: number;
 }
 export interface IUserStore {
   loginSuccess: boolean;
   joinFlag: number;
-  isModalOpen: boolean,
   basketInfo: Basket[],
   adminTab: number,
 }
@@ -24,7 +24,6 @@ const user: Module<IUserStore, RootState> = {
     loginSuccess: false,
     // flag 0 = 판매자, flag 1 = 구매자
     joinFlag: 1,
-    isModalOpen: false,
     basketInfo: [],
     adminTab: 1,
   }),
@@ -34,10 +33,6 @@ const user: Module<IUserStore, RootState> = {
     },
     setJoinFlag(state: IUserStore, payload: number) {
       state.joinFlag = payload;
-    },
-    // modal open / close
-    setIsModalOpen(state: IUserStore, payload: boolean) {
-      state.isModalOpen = payload;
     },
     // 관리자 선택한 탭
     setAdminTab(state: IUserStore, payload: number) {

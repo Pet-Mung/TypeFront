@@ -1,4 +1,4 @@
-@import "./mixin";
+@import "@/assets/scss/comn/mixin";
 // listView
 .table-bordered .no_data_table {
   font-weight: 700;
@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  height: 30vh;
+  height: 50vh;
 
   img {
     width: 50px;
@@ -233,5 +233,16 @@ form.product-form {
 @include nav_pc {
   .shop_wrap .tab_cat_06 {
     display: none;
+  }
+}
+@include nav_mo {
+  .shop_wrap .tab_cat_01 {
+    // justify-content: center;
+    width: 100%;
+    max-width: 570px;
+    margin: 0 auto;
+  }
+  .shop_wrap .tab_cat_06 {
+    flex-wrap: wrap;
   }
 }

@@ -39,15 +39,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 const store = useStore();
 const router = useRouter();
 
-const goProduct = (idx) => {
-  router.push(`/shop/products`);
+const goProduct = (idx : number) : void => {
+  router.push(`/products`);
   store.commit("product/setAnimalTab", idx);
   store.commit("product/setIsChange", true);
   store.commit("product/setCtgyName", "ALL");

@@ -1,4 +1,4 @@
-@import "./mixin";
+@import "@/assets/scss/comn/mixin";
 /* header */
 
 .header_wrap {
@@ -13,7 +13,10 @@
   padding: 10px;
   z-index: 999;
   .logo_area {
-    cursor: pointer;
+    width: 95%;
+    max-width: 1440px;
+    margin: 0 auto;
+    border-bottom: 1px solid #dadada;
     img {
       width: 40px;
       margin-left: 8px;
@@ -23,17 +26,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      // font-family: "Gowun Batang", sans-serif;
-      border-bottom: 1px solid #dadada;
-      width: 95%;
+      width: fit-content;
+      cursor: pointer;
       padding-bottom: 10px;
       margin: 0 auto;
       font-weight: 400;
     }
   }
-}
-.nav_bar * {
-  font-family: var(--bs-side-font-family);
 }
 
 @include nav_pc {
@@ -41,6 +40,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
   .nav_bar {
     display: flex;
@@ -53,18 +55,21 @@
       align-items: center;
     }
     li.active {
-      color: #ff402b;
+      color: #ff9f03;
       font-weight: 700;
+      &.diff{
+        color: #ff402b;
+      }
     }
     &.nv_left {
-      padding-left: 50px;
+      // padding-left: 50px;
       li {
         cursor: pointer;
       }
     }
     &.nv_right {
       justify-content: right;
-      padding-right: 50px;
+      // padding-right: 50px;
       a {
         display: flex;
       }
@@ -72,14 +77,21 @@
   }
 }
 @include nav_mo {
+  .header_wrap{
+    height: 60px;
+  }
+  .main_wrap{
+    padding-top: 60px;
+  }
   .nav_btn {
+    cursor: pointer;
     display: block;
     height: 26px;
     width: 32px;
     position: absolute;
-    top: 50%;
+    top: 30px;
     transform: translateY(-50%);
-    right: 50px;
+    right: 5%;
     z-index: 2;
     display: flex;
     flex-direction: column;

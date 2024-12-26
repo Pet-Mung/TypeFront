@@ -29,13 +29,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
-const props = defineProps({
-  currentPage: { type: Number },
-  totalPages: { type: Number },
-  isEmpty: { type: Boolean },
-});
+const props = defineProps<{
+  currentPage : number;
+  totalPages : number;
+  isEmpty: boolean;
+}>();
 const emit = defineEmits(["changePage"]);
 </script>
 

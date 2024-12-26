@@ -3,11 +3,11 @@
     <ul class="flex_center">
       <li @click="selectJoinFlag(0)" class="mr-10">
         <img src="@/assets/img/user/seller.png" alt="seller" />
-        <p class="text-center fs-20 ff_02">Seller Member</p>
+        <p class="text-center fs-18 ff_02">판매 회원(기업)</p>
       </li>
       <li @click="selectJoinFlag(1)" class="ml-10">
         <img src="@/assets/img/user/buyer.png" alt="shopper" />
-        <p class="text-center fs-20 ff_03">Customer Member</p>
+        <p class="text-center fs-18 ff_02">구매 회원</p>
       </li>
     </ul>
   </div>

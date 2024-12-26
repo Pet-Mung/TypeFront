@@ -15,7 +15,8 @@
     "types": [
       "webpack-env",
       "vite/client",
-      "dropzone"
+      // "dropzone",
+      "vue"
     ],
     "paths": {
       "@/*": [

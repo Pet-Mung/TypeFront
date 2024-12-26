@@ -6,16 +6,18 @@
       <div class="intro_02"></div>
     </section>
     <section class="main-banner">
-      <SliderView :flag="flag" :sliderData="bannerData" />
+      <ComnSlider :flag="flag" :sliderData="bannerData" />
     </section>
   </div>
 </template>
 
-<script setup>
-import SliderView from "@/components/common/ComnSlider.vue";
+<script setup lang="ts">
+import ComnSlider from "@/components/common/ComnSlider.vue";
+import { IBanner } from "@/types";
 let flag = 3;
 
-let bannerData = [
+
+let bannerData : IBanner[] = [
   {
     backgroundImage: require("@/assets/img/banner/banner01.jpg"),
     color:"#dfffcc",

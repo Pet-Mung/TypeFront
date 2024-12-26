@@ -7,7 +7,7 @@
   <nav :class="isNav ? 'nav active' : 'nav'">
     <ul class="nav_bar nv_left">
       <li
-        @click="selectCtgy('ALL')"
+        @click="selectCtgy('ALL',-1)"
         :class="{ active: categoryName == 'ALL' && mainPath == 'shop' }"
       >
         ALL
@@ -24,14 +24,14 @@
     <ul class="nav_bar nv_right">
       <li
         v-if="!loginSuccess"
-        :class="{ active: mainPath == 'join' }"
+        :class="['diff',{ active: mainPath == 'join' }]"
         @click="isNav = false"
       >
         <router-link to="/join">Sign Up</router-link>
       </li>
       <li
         v-if="!loginSuccess"
-        :class="{ active: mainPath == 'login' }"
+        :class="['diff',{ active: mainPath == 'login' }]"
         @click="isNav = false"
       >
         <router-link to="/login"
@@ -89,7 +89,7 @@
   </nav>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import productApi from "@/api/apiProduct";
 import { getItemWithExpireTime } from "@/utils/common";
 import { computed, ref } from "vue";
@@ -115,22 +115,21 @@ if (userId.value != "" && userId.value != undefined) {
 }
 let ctgy = ref([]);
 const categoryName = computed(() => {
-  return 1;
-  // return store.state.product.category_name;
+  return store.state.product.category_name;
 });
 
 // 용품 카테고리 api 호출
-const getCtgy = async () => {
-  // let result = await productApi.getCategory();
-  // ctgy.value = result;
+const getCtgy = async () : Promise<void> => {
+  let result = await productApi.getCategory();
+  ctgy.value = result;
 };
 // 선택한 카테고리 이름 store 저장
-const selectCtgy = (ctgyName, idx) => {
+const selectCtgy = (ctgyName : string , idx : number) => {
   idx += 1;
   store.commit("product/setCtgyName", ctgyName);
   isNav.value = false;
-  if (idx) router.push(`/shop/products/${idx}`);
-  else router.push(`/shop/products`);
+  if (idx > 0) router.push(`/products/${idx}`);
+  else router.push(`/products`);
 };
 // created
 getCtgy();

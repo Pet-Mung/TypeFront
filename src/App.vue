@@ -9,15 +9,14 @@
 </template>
 
 <script setup lang="ts">
-import "@/assets/css/style.css";
-import "@/assets/css/reset.css";
-import "@/assets/css/header.scss";
-import "@/assets/css/footer.scss";
-import "@/assets/css/modal.scss";
-import "@/assets/css/_variable.scss";
-import "@/assets/css/user.scss";
-import "@/assets/css/product.scss";
-
+import "@/assets/scss/comn/_style.scss";
+import "@/assets/scss/comn/_variable.scss";
+import "@/assets/scss/comn/reset.scss";
+import "@/assets/scss/layout/header.scss";
+import "@/assets/scss/layout/footer.scss";
+import "@/assets/scss/layout/modal.scss";
+import "@/assets/scss/pages/user.scss";
+import "@/assets/scss/pages/product.scss";
 
 import { useRoute } from "vue-router";
 import { computed, defineComponent } from "vue";

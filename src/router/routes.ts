@@ -1,12 +1,7 @@
 // view
-// import ShopView from "@/views/ShopView.vue";
 // import UserView from "@/views/UserView.vue";
 
 // components
-
-//shop
-// import Product from "@/components/shop/ShopProduct.vue";
-// import ProductDetail from "@/components/shop/ShopProductDetail.vue";
 
 // // user
 // import UserDelivery from "@/components/user/UserDelivery.vue";
@@ -25,10 +20,10 @@
 // //comn
 // import ComnNotFound from "@/components/comn/ComnNotFound.vue";
 
-// //icon
-// import iconView from "@/components/public/TheIcon.vue";
+//icon
+import iconView from "@/components/common/ComnIcon.vue";
 import { RouteRecordRaw } from "vue-router";
-const routes : Array<RouteRecordRaw> = [
+const routes: Array<RouteRecordRaw> = [
   // 메인 페이지
   {
     path: "/",
@@ -51,20 +46,15 @@ const routes : Array<RouteRecordRaw> = [
     props: true,
   },
   //상품 페이지
-  // {
-  //   path: "/shop",
-  //   component: ShopView,
-  //   children: [
-  //     {
-  //       path: "products",
-  //       children: [
-  //         { path: "", component: Product },
-  //         { path: ":id", component: Product },
-  //         { path: "detail/:id", component: ProductDetail },
-  //       ],
-  //     },
-  //   ],
-  // },
+  {
+    path: "/products",
+    component:  ()=> import("@/pages/product/index.vue"),
+    children: [
+      { path: "", component: ()=> import("@/pages/product/ProductList.vue") },
+      { path: ":id", component: ()=> import("@/pages/product/ProductList.vue") },
+      { path: "detail/:id", component: ()=> import("@/pages/product/ProductDetail.vue") },
+    ],
+  },
   // //유저 페이지
   // {
   //   path: "/user",
@@ -100,16 +90,18 @@ const routes : Array<RouteRecordRaw> = [
   //     },
   //   ],
   // },
-  // // icon 저작권 페이지
-  // {
-  //   path: "/icons",
-  //   name: "iconView",
-  //   component: iconView,
-  //   props: true,
-  // },
-  { path: "/:pathMatch(.*)*",
+  // icon 저작권 페이지
+  {
+    path: "/icons",
+    name: "iconView",
+    component: iconView,
+    props: true,
+  },
+  {
+    path: "/:pathMatch(.*)*",
     component: () => import("@/pages/views/ViewNotFound.vue"),
   },
+
 ];
 
 export default routes;

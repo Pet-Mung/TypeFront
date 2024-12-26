@@ -56,32 +56,32 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   getItemWithExpireTime,
   commonNumber,
   imageCheck,
 } from "@/utils/common";
-import PagingView from "@/components/comn/ComnPaging.vue";
+import PagingView from "@/components/common/ComnPaging.vue";
 import { computed, defineProps, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { IProductsResult } from "@/types/product";
+import { Basket } from "@/store/user";
 const store = useStore();
 const router = useRouter();
-const props = defineProps({
-  list: { type: Array },
-  tabChange: { type: Number },
-});
+const props = defineProps<{
+  list: IProductsResult[],
+  tabChange: number,
+}>();
 
 let currentPage = ref(1); //현재 페이지 번호
-let postsperPage = 10; //한 페이지에 보여줄 게시글 갯수
-let isEmpty = ref(false); //데이터 빈 값 여부
+let postsperPage = 10; //한 페이지 게시글 갯수
+let isEmpty = ref(false); 
 const totalPages = computed(() => {
-  //총 페이지 수
   return Math.ceil(props.list.length / postsperPage);
 });
 
-// 현재 페이지에 해당하는 게시글 목록을 반환
 const displayedPosts = computed(() => {
   const startIndex = (currentPage.value - 1) * postsperPage;
   const endIndex = startIndex + postsperPage;
@@ -121,42 +121,41 @@ const getBasketView = async () => {
 };
 
 // 장바구니 추가 api 호출
-const addCartBtn = async (item) => {
+const addCartBtn = async (pdt : IProductsResult) => {
   let count = 1;
   const addBasketinfo = {
-    productId: item.id,
+    productId: pdt.id,
     count: count,
   };
   await store.dispatch("user/addBasket", addBasketinfo);
-  item.isCart = true;
+  pdt.isCart = true;
   // getBasketView();
 };
 // 장바구니 삭제 api 호출
-const delCartBtn = (pdt) => {
+const delCartBtn = (pdt : IProductsResult) => {
   console.log("basketInfo", basketInfo.value);
-  let nameArr = {};
-  nameArr = basketInfo.value.filter((item) => {
+  const nameArr = basketInfo.value.filter((item: Basket) => {
     return pdt.name == item.product_name;
   });
   // nameArr.forEach((item) => {
   //   store.dispatch("common/delBasket", item.id);
   // });
-  store.dispatch("user/delBasket", nameArr.id);
+  store.dispatch("user/delBasket", nameArr[0].id);
   pdt.isCart = false;
   // getBasketView();
 };
 
 // detail page
-const clickProduct = (id) => {
-  window.sessionStorage.setItem("productId", id);
-  router.push(`/shop/products/detail/${id}`);
+const clickProduct = (id : number) => {
+  window.sessionStorage.setItem("productId", String(id));
+  router.push(`/products/detail/${id}`);
 };
 
 //페이지 변경
-const changePage = (str) => {
+const changePage = (str : string | number) => {
   if (str == "prev") currentPage.value--;
   else if (str == "next") currentPage.value++;
-  else currentPage.value = str;
+  else if(typeof str === "number") currentPage.value = str;
 };
 
 // const selectListChange = (e,id) => {

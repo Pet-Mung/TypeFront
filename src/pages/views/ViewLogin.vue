@@ -6,23 +6,31 @@
     </div>
     <div class="int-area">
       <input type="password" id="userPw" required v-model.trim="info.password" />
-      <label for="userPw">PASSWORD</label>
+      <label for="userPw">비밀번호</label>
     </div>
     <div class="btn-area">
-      <button id="Lbtn" type="button" @click="loginCheck">LOGIN</button>
+      <button id="Lbtn" type="button" @click="loginCheck">로그인</button>
     </div>
     <div class="caption">
-      <span @click="openModal">Forgot Password?</span>
+      <span @click="openDialogHandler">비밀번호를 잊으셨나요?</span>
     </div>
-    <ModalComn v-if="isModalOpen" modalName ="Password Recovery" modalSize="small" :modalFlag = 1 />
   </div>
+  <modal-pw :isVisible="dialog.isPwVisible" @closeDialogHandler="closeDialogHandler" width="90%" maxWidth="400px" />
+  <modal-comn 
+    :isVisible="dialog.isVisible" 
+    :isBtn="true"
+    :content="dialog.content"
+    :isOverlay="false"
+    @closeDialogHandler="closeDialogHandler" 
+    />
 </template>
 
 <script setup>
-import { computed, reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import ModalComn from "@/components/modal/ModalComn.vue"; 
+import ModalPw from "@/components/modal/sub/ModalFindPw.vue"; 
 
 const router = useRouter();
 const store = useStore();
@@ -39,11 +47,15 @@ let info = reactive({
   client_secret : "",
 });
 
+const dialog = ref({
+  state : 1,
+  isVisible : false,
+  isPwVisible : false,
+  content : "",
+})
+
 const loginSuccess = computed(()=>{
   return store.state.user.loginSuccess;
-});
-const isModalOpen = computed(()=>{
-  return store.state.user.isModalOpen;
 });
 
 if(loginSuccess.value){
@@ -55,10 +67,12 @@ if(loginSuccess.value){
 // 로그인 로직 확인
 const loginCheck = async () => {
     if(info.username === "") {
-        alert("Please enter your ID.");
+        dialog.value.content = "ID를 입력해 주세요.";
+        dialog.value.isVisible = true;
         isCheck.isNotNm = true;
     } else if (info.password === "") {
-        alert("Please enter your password.");
+        dialog.value.content = "비밀번호를 입력해 주세요.";
+        dialog.value.isVisible = true;
         isCheck.isNotNm = false;
         isCheck.isNotPw = true;
     } else {
@@ -67,9 +81,12 @@ const loginCheck = async () => {
     }
 }
 
-// isOpenModal state 관리
-const openModal = () => {
-  store.commit('user/setIsModalOpen',true);
+const closeDialogHandler = () => {
+  dialog.value.isVisible = false;
+  dialog.value.isPwVisible = false;
+}
+const openDialogHandler = () => {
+  dialog.value.isPwVisible = true;
 }
 
 </script>

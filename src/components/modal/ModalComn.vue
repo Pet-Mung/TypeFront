@@ -1,36 +1,50 @@
 <template>
-    <div class="modal_overlay" @click.self="closeModal">
-        <div :class="props.modalSize == 'large' ? 'modal_wrap mo_L' : 'modal_wrap mo_S'">
-            <div class="modal_title">
-                <h4>{{ props.modalName }}</h4>
-                <div class="close_btn" @click="closeModal">닫기</div>  
-            </div>
-            <div class="modal_body">
-                <findPw v-if="props.modalFlag == 1"/>
-            </div>  
+    <modal-frame 
+      :isVisible="props.isVisible" 
+      :width="props.width" 
+      :hegiht="props.height" 
+      :maxWidth="props.maxWidth"
+      :isOverlay="props.isOverlay"
+      @closeDialogHandler="closeHandler">
+        <div class="modal_title">
+            <h4>{{ props.title || 'Alert' }}</h4>
+            <div v-if="!isBtn" class="close_btn" @click="closeHandler">닫기</div>
         </div>
-    </div>
+        <div class="modal_body modal_comn">
+            <p v-html="props.content"></p>
+        </div>
+        <div class="modal_btn" v-if="isBtn">
+            <button @click="closeHandler">닫기</button>
+        </div>
+    </modal-frame>
 </template>
 
-<script setup>
-import { defineProps } from 'vue';
-import { useStore } from 'vuex';
-import findPw from './sub/ModalFindPw.vue';
-const store = useStore();
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
+// import findPw from './sub/ModalFindPw.vue';
+import ModalFrame from './ModalFrame.vue';
 const props = defineProps({
-    modalFlag : { type : Number },
-    modalName : { type : String },
-    modalSize : { type : String },
+    isVisible: { type: Boolean },
+    title: { type: String },
+    content: { type: String },
+    width: { type: String },
+    height: { type: String },
+    maxWidth: { type: String },
+    isBtn: {
+        type: Boolean,
+        default: false,
+    },
+    isOverlay: {
+        type: Boolean,
+        default: true,
+    }
 });
-const body =document.querySelector('body');
-body.style.overflow = 'hidden';
-const closeModal = () => {
-  body.style.overflow = 'auto';
-  store.commit('user/setIsModalOpen',false);
+const emit = defineEmits(['closeDialogHandler']);
+
+const closeHandler = () => {
+    emit('closeDialogHandler');
 }
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

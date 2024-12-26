@@ -4,7 +4,7 @@
   <div class="user_wrap" v-if="isJoinSelect == true">
     <!-- email -->
     <div class="user_input">
-      <label for="userEmail">E-MAIL</label>
+      <label for="userEmail">이메일</label>
       <input
         type="text"
         id="userEmail"
@@ -18,7 +18,7 @@
         @click="isEmailCheck"
         v-if="!isCheck.isEm"
       >
-        NEXT
+        다음
       </button>
     </div>
     <transition name="fade">
@@ -38,14 +38,14 @@
           @click="isNameCheck"
           v-if="!isCheck.isNm"
         >
-          NEXT
+        다음
         </button>
       </div>
     </transition>
     <transition name="fade">
       <!-- password -->
       <div class="user_input" v-if="isCheck.isNm">
-        <label for="userPw">PASSWORD</label>
+        <label for="userPw">비밀번호</label>
         <input
           type="password"
           @keyup="pwdCheck"
@@ -57,7 +57,7 @@
     </transition>
     <transition name="fade">
       <div class="user_input" v-if="isCheck.isNm">
-        <label for="userPwChk">CONFIRM PASSWORD</label>
+        <label for="userPwChk">비밀번호 확인</label>
         <input
           type="password"
           @keyup="pwdCheck"
@@ -79,13 +79,20 @@
     </transition>
     <transition name="fade">
       <div class="confirm_box" v-if="isCheck.isNm">
-        <p>Please enter a password between 8 and 12 characters long, including numbers, letters, and special characters.</p>
+        <p>숫자, 문자, 특수 문자를 포함하여 8자에서 12자 사이의 비밀번호를 입력해 주세요.</p>
         <button type="button" class="confirm_btn" @click="isPwCheck">
-          CONFIRM
+          가입하기
         </button>
       </div>
     </transition>
   </div>
+  <modal-comn 
+    :isVisible="dialog.isVisible"
+    :isBtn="true"
+    :content="dialog.content"
+    @closeDialogHandler="closeDialogHandler"
+  />
+
 </template>
 
 <script setup>
@@ -94,29 +101,34 @@ import api from "@/api/apiUser";
 import { emailCheck, nameCheck, passwordCheck } from "@/utils/common";
 import { useRouter } from "vue-router";
 import JoinSelect from "./ViewJoinSelect.vue";
-let router = useRouter();
-
-let isCheck = reactive({
+import ModalComn from "@/components/modal/ModalComn.vue"; 
+const router = useRouter();
+const isCheck = reactive({
   isPw: false,
   //   isPwChk: "",
   isNm: false,
   isEm: false,
 });
-let isJoinSelect = ref(false);
-let isInput = toRef(false);
-let chkPw = toRef(false);
-let info = reactive({
+const isJoinSelect = ref(false);
+const isInput = toRef(false);
+const chkPw = toRef(false);
+const info = reactive({
   password: "",
   password_check: "",
   username: "",
   email: "",
 });
+const dialog = ref({
+  isVisible : false,
+  content : "",
+})
 // 회원가입 api 호출
 const createUser = async (info) => {
   try {
     const result = await api.joinUser(info);
     if (result.status === "201") {
-      alert("You have successfully registered.");
+      dialog.value.content = "가입이 성공적으로 완료되었습니다.";
+      dialog.value.isVisible = true;
       router.push("/");
     }
   } catch (error) {
@@ -132,9 +144,11 @@ const callFn = (flagBool) => {
 // 이메일 확인
 const isEmailCheck = () => {
   if (info.email === "") {
-    alert("Please enter your email.");
+    dialog.value.content = "이메일을 입력해 주세요.";
+    dialog.value.isVisible = true;
   } else if (!emailCheck(info.email)) {
-    alert("Please check if the email was entered incorrectly.");
+    dialog.value.content = "이메일을 잘못 입력했는지 확인해 주세요.";
+    dialog.value.isVisible = true;
   } else isCheck.isEm = true;
 };
 
@@ -142,9 +156,11 @@ const isEmailCheck = () => {
 const isNameCheck = () => {
   if (isCheck.isEm) {
     if (info.username === "") {
-      alert("Please enter your ID.");
+      dialog.value.content = "ID를 입력해 주세요.";
+      dialog.value.isVisible = true;
     } else if (!nameCheck(info.username)) {
-      alert("Please check if the ID was entered incorrectly.");
+      dialog.value.content = "ID를 잘못 입력했는지 확인해 주세요.";
+      dialog.value.isVisible = true;
     } else isCheck.isNm = true;
   }
 };
@@ -153,13 +169,14 @@ const isNameCheck = () => {
 const isPwCheck = () => {
   if (isCheck.isNm) {
     if (info.password === "") {
-      alert("Please enter your password");
+      dialog.value.content = "비밀번호를 입력해 주세요.";
+      dialog.value.isVisible = true;
     } else if (info.password_check === "") {
-      alert("Please enter your confirm password.");
+      dialog.value.content = "비밀번호 확인을 입력해 주세요.";
+      dialog.value.isVisible = true;
     } else if (!passwordCheck(info.password, info.password_check)) {
-      alert(
-        "Please enter a password between 8 and 12 characters, including numbers, letters, and special characters."
-      );
+      dialog.value.content = "숫자, 문자, 특수 문자를 포함하여 8자에서 12자 사이의 비밀번호를 입력해 주세요.";
+      dialog.value.isVisible = true;
     } else {
       isCheck.isPw = true;
       joinBtn();
@@ -184,4 +201,8 @@ const joinBtn = () => {
     createUser(info);
   }
 };
+
+const closeDialogHandler = () => {
+  dialog.value.isVisible = false;
+}
 </script>
