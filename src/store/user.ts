@@ -9,6 +9,7 @@ export interface Basket {
   productId: string;
   product_name: string;
   count: number;
+  price: number;
 }
 export interface IUserStore {
   loginSuccess: boolean;

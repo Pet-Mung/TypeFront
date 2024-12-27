@@ -64,7 +64,7 @@
 // user 정보 조회 api 호출
 import api from "@/api/apiUser";
 import PagingView from "@/components/common/ComnPaging.vue";
-import { IUsers } from "@/types/user";
+import { IExtendUser } from "@/types/user";
 import { pagingFn } from "@/utils/common";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
@@ -73,7 +73,7 @@ import ModalConfirm from "@/components/modal/ModalConfirm.vue";
 import ModalAlert from "@/components/modal/ModalAlert.vue"; 
 const store = useStore();
 const router = useRouter();
-const usersInfo = ref<IUsers[]>([]);
+const usersInfo = ref<IExtendUser[]>([]);
 const dialog = ref({
     isVisible: false,
     isAlertVisible:false,

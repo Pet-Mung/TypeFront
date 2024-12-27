@@ -16,32 +16,51 @@ export interface ILoginInfo {
 
 export interface IUsers {
   id: number;
+  email: string;
+  created_at : datetime;
+  updated_at : datetime;
+  address : string;
+  phone_number : string;
+  is_active : string;
+  // 다른 사용자 정보 필드 추가
+}
+export interface IExtendUser extends IUsers {
   username?: string;
   user_name?: string;
-  email: string;
-  created_at : datetime;
-  updated_at : datetime;
-  address : string;
-  phone_number : string;
-  is_active : string;
-  // 다른 사용자 정보 필드 추가
 }
-
-export interface IUser {
-  id: number;
+export interface IExtendInfo extends IUsers {
   user_name: string;
-  email: string;
-  created_at : datetime;
-  updated_at : datetime;
-  address : string;
-  phone_number : string;
-  is_active : string;
-  // 다른 사용자 정보 필드 추가
+  is_admin : string;
 }
-
 export interface IResultLogin {
   access_token: string;
   token_type:string
   username:string
   user_id:string
+}
+
+// 구매목록
+export interface IPurchaseData {
+  id: number,
+  user_id: number,
+  product_id: number,
+  count: number,
+  purchase_chk: boolean,
+  created_at: datetime,
+  updated_at: datetime,
+  name: string,
+  image: string,
+}
+
+// profile
+export interface IProfile {
+  password?: "",
+  password_check?: "",
+  user_name: string;
+  email: string;
+  address: string;
+  detail_address: string;
+  phone_number: string;
+  zonecode : string;
+  is_admin : string;
 }

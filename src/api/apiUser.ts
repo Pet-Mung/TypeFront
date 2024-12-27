@@ -1,6 +1,6 @@
 import { API } from "./apiAuth";
 import { AxiosError } from 'axios';
-import { IJoinInfo, ILoginInfo, IUsers, IUser, IResultLogin } from "@/types/user"
+import { IJoinInfo, ILoginInfo, IResultLogin, IProfile, IExtendInfo, IExtendUser } from "@/types/user"
 import { ApiResponse } from "@/types/api";
 // password,password_check,username,email
 // 회원가입 api 호출
@@ -47,9 +47,9 @@ const loginUser = async (info: ILoginInfo): Promise<ApiResponse<IResultLogin>> =
 
 
 // 회원 정보 전체 조회 api 호출
-const getUsers = async (): Promise<IUsers[]> => {
+const getUsers = async (): Promise<IExtendUser[]> => {
     try {
-        const response = await API.get<ApiResponse<IUsers[]>>(`user/`);
+        const response = await API.get<ApiResponse<IExtendUser[]>>(`user/`);
         return response.data.data;
     } catch (error) {
         throw new Error('Unexpected error occurred');
@@ -57,24 +57,24 @@ const getUsers = async (): Promise<IUsers[]> => {
 }
 
 // 특정 회원 정보 조회 api 호출
-const getOnlyUser = async (user_id: string) => {
+const getOnlyUser = async (user_id: string) : Promise<IExtendInfo[]> => {
     try {
-        const response = await API.get<ApiResponse<any>>(`user/?user_id=${user_id}`);
+        const response = await API.get<ApiResponse<IExtendInfo[]>>(`user/?user_id=${user_id}`);
+        return response.data.data;
+    } catch (error) {
+        throw new Error(`error`);
+    }
+}
+
+// 회원 정보 수정 api 호출
+const putOnlyUser = async (user_id: string, info : IProfile) => {
+    try {
+        const response = await API.put(`user/${user_id}`, info);
         return response.data;
     } catch (error) {
         console.error(error);
     }
 }
-
-// 회원 정보 수정 api 호출
-// const putOnlyUser = async (user_id: string, info) => {
-//     try {
-//         const response = await API.put(`user/${user_id}`, info);
-//         return response.data;
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
 
 // 회원 정보 삭제 api 호출
 const delOnlyUser = async (user_id: string) : Promise<number> => {
@@ -90,6 +90,6 @@ export default {
     loginUser,
     getUsers,
     getOnlyUser,
-    // putOnlyUser,
+    putOnlyUser,
     delOnlyUser,
 };

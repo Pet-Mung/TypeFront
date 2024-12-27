@@ -6,7 +6,7 @@
         <div class="profile">
           <img src="@/assets/img/profile_icon.png" alt="프로필 아이콘" />
           <h3 class="fc-w ml-5 mr-15 pd-10 fs-30">
-            {{ data.user_name }}<span class="fs-15"> 님</span>
+            {{ data ? data.user_name : "" }}<span class="fs-15"> 님</span>
           </h3>
           <button class="pd-10 fs-15 bx-shadow" @click="router.push('profile')">
             내정보 수정
@@ -82,19 +82,24 @@
   </div>
 </template>
 
-<script setup>
-import api from "@/api/userApi.js";
+<script setup lang="ts">
+import api from "@/api/apiUser.js";
 import { computed, onBeforeMount, ref } from "vue";
 import SliderView from "@/components/comn/ComnSlider.vue";
 import { useRouter } from "vue-router";
 import { getItemWithExpireTime } from "@/utils/common";
 import { useStore } from "vuex";
-let store =useStore();
-let router = useRouter();
-let data = ref({});
-// slider type
-let flag = 1;
-let purchaseData = [
+import { IPurchaseData } from "@/types/user";
+
+export interface IUserName {
+    user_name: string | undefined;
+}
+
+const store =useStore();
+const router = useRouter();
+const data = ref<IUserName | null>(null);
+const flag = 1; // slider type
+const purchaseData  : IPurchaseData[] = [
   {
     id: 1,
     user_id: 5,
@@ -118,9 +123,7 @@ let purchaseData = [
     image: require("@/assets/img/default.png"),
   },
 ];
-const basketInfo = computed(()=>{
-    return store.state.user.basketInfo;
-})
+const basketInfo = computed(()=> store.state.user.basketInfo);
 
 // const imgAdd = (image) => {
 //   this.imgSrc = require(image);
@@ -132,7 +135,8 @@ const user_idx = computed(() => {
 const getUserInfo = async () => {
   try {
     const result = await api.getOnlyUser(user_idx.value);
-    data.value = result.data[0];
+    data.value = result[0];
+    // data.value = result;
   } catch (error) {
     console.error(error);
   }
@@ -150,10 +154,5 @@ const deleteUserInfo = () => {
     router.push('/');
   }
 }
-
-onBeforeMount(() => {
-  getUserInfo();
-  getBasketView();
-  console.log(basketInfo);
-});
+await Promise.all([ getUserInfo(),getBasketView()]);
 </script>

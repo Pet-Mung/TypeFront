@@ -20,36 +20,20 @@
     <div class="input_addr">
       <div class="user_input">
         <label>우편번호</label>
-        <input
-          type="text"
-          name="zoneCode"
-          v-model.trim="zonecode"
-          readonly
-          @mousedown="$event.preventDefault()"
-          @click="addressSearch"
-        />
+        <input type="text" name="zoneCode" v-model.trim="info.zonecode" readonly @mousedown="$event.preventDefault()"
+          @click="addressSearch" />
         <button @click="addressSearch" class="btn_type_01 ml-20">
           주소 검색
         </button>
       </div>
       <div class="user_input">
         <label>주소</label>
-        <input
-          type="text"
-          v-model="info.address"
-          readonly
-          @mousedown="$event.preventDefault()"
-          @click="addressSearch"
-        />
+        <input type="text" v-model="info.address" readonly @mousedown="$event.preventDefault()"
+          @click="addressSearch" />
       </div>
       <div class="user_input">
         <label>상세주소</label>
-        <input
-          type="text"
-          name="detailAddr"
-          placeholder="oo동 ,oo호 입력"
-          v-model="info.detail_address"
-        />
+        <input type="text" name="detailAddr" placeholder="oo동 ,oo호 입력" v-model="info.detail_address" />
       </div>
     </div>
     <div class="user_input radio_area" v-if="mainPath == 'manage'">
@@ -61,21 +45,9 @@
     </div>
     <div class="user_input radio_area" v-if="mainPath == 'manage'">
       <label>관리자 여부</label>
-      <input
-        type="radio"
-        name="isAdmin"
-        id="ad_true"
-        v-model="info.is_admin"
-        value="true"
-      />
+      <input type="radio" name="isAdmin" id="ad_true" v-model="info.is_admin" value="true" />
       <label for="ad_true">O</label>
-      <input
-        type="radio"
-        name="isAdmin"
-        id="ad_false"
-        v-model="info.is_admin"
-        value="false"
-      />
+      <input type="radio" name="isAdmin" id="ad_false" v-model="info.is_admin" value="false" />
       <label for="ad_false">X</label>
     </div>
     <div class="confirm_box">
@@ -84,8 +56,8 @@
   </div>
 </template>
 
-<script setup>
-import api from "@/api/userApi.js";
+<script setup lang="ts">
+import api from "@/api/apiUser.js";
 import { reactive, computed, onBeforeMount, ref } from "vue";
 import {
   emailCheck,
@@ -94,29 +66,26 @@ import {
   phoneCheck,
 } from "@/utils/common.js";
 import { useRoute, useRouter } from "vue-router";
+import { IProfile, IExtendInfo } from "@/types/user";
+
+
 
 const router = useRouter();
 const route = useRoute();
-let info = reactive({
-  //   password: "",
-  //   password_check: "",
+const info = reactive<IProfile>({
   user_name: "",
   email: "",
   address: "",
   detail_address: "",
   phone_number: "",
+  zonecode: "",
+  is_admin: "",
 });
-let zonecode = ref("");
-// info 받아온 값
-let originInfo = {};
-// 전체 유효성 체크
-let isCheck = false;
-// 수정했는지 체크 //수정 안했으면 false
-let modifyBool = false;
 
-const mainPath = computed(() => {
-  return route.path.split("/")[1];
-});
+const originInfo = ref<IExtendInfo | null>(null);
+const isCheck = ref(false);
+const modifyBool = ref(false);
+const mainPath = computed(() => route.path.split("/")[1]);
 const user_idx = computed(() => {
   if (mainPath.value == "manage") {
     return window.sessionStorage.getItem("click_idx");
@@ -125,28 +94,36 @@ const user_idx = computed(() => {
   }
 });
 // user 정보 조회 api 호출
-const getUserInfo = async () => {
+const getUserInfo = async () : Promise<void> => {
   try {
     const result = await api.getOnlyUser(user_idx.value);
-    let data = result.data[0];
-    originInfo = result.data[0];
-    info.user_name = data.user_name;
-    info.email = data.email;
-    info.phone_number = data.phone_number;
-    info.address = data.address?.split("&")[0];
-    info.detail_address = data.address?.split("&")[1];
-    info.is_admin = data.is_admin;
+    const data = result[0];
+    originInfo.value = result[0];
+    const { user_name, email, phone_number, address, is_admin } = data;
+    info.user_name = user_name;
+    info.email = email;
+    info.phone_number = phone_number;
+    info.is_admin = is_admin;
+    if (address) {
+      const [mainAddr, subAddr] = address.split("&");
+      info.address = mainAddr || "";
+      info.detail_address = subAddr || "";
+    } else {
+      info.address = "";
+      info.detail_address = "";
+    }
+
   } catch (error) {
-    console.error(error);
+    return;
   }
 };
 
 // user 정보 수정 api 호출
-const putUserInfo = async () => {
+const putUserInfo = async () : Promise<void> => {
   try {
-    if(info.address == undefined) info.address = '';
-    if(info.detail_address == undefined) info.detail_address = '';
-    if(info.phone_number == undefined) info.address = '';
+    if (info.address == undefined) info.address = '';
+    if (info.detail_address == undefined) info.detail_address = '';
+    if (info.phone_number == undefined) info.address = '';
     const result = await api.putOnlyUser(user_idx.value, info);
     if (result.status == "200") {
       alert(result.detail);
@@ -180,21 +157,24 @@ const isNameCheck = () => {
 const isPhoneCheck = () => {
   if (!phoneCheck(info.phone_number)) {
     alert("핸드폰 번호를 확인하세요.");
-  } else isCheck = true;
+  } else isCheck.value = true;
 };
 
 // 회원정보 수정 버튼 클릭시
-const modifyBtn = () => {
-  if (
-    originInfo.user_name == info.user_name &&
-    originInfo.email == info.email &&
-    originInfo.phone_number == info.phone_number &&
-    originInfo.address?.split("&")[0] == info.address &&
-    originInfo.address?.split("&")[1] == info.detail_address
-    // originInfo.is_admin == info.is_admin 
-  ) {
-    modifyBool = false;
-  } else modifyBool = true;
+const modifyBtn = () : void => {
+  if (originInfo.value) {
+    if (
+      originInfo.value.user_name == info.user_name &&
+      originInfo.value.email == info.email &&
+      originInfo.value.phone_number == info.phone_number &&
+      originInfo.value.address?.split("&")[0] == info.address &&
+      originInfo.value.address?.split("&")[1] == info.detail_address
+      // originInfo.value.is_admin == info.is_admin 
+    ) {
+      modifyBool.value = false;
+    } else modifyBool.value = true;
+  }
+
   if (modifyBool) {
     // 이메일, 아이디 필수값
     isEmailCheck();
@@ -208,14 +188,12 @@ const modifyBtn = () => {
 const addressSearch = () => {
   new window.daum.Postcode({
     oncomplete: (data) => {
-      zonecode = data.zonecode;
+      info.zonecode = data.zonecode;
       info.address = data.roadAddress;
-      info.detailAddr = data.detailAddress;
+      info.detail_address = data.detailAddress;
     },
   }).open();
 };
 
-onBeforeMount(() => {
-  getUserInfo();
-});
+await getUserInfo();
 </script>

@@ -28,7 +28,7 @@
         <tr
           v-for="(item, index) in basketInfo"
           :key="index"
-          @click.self="clickProduct(item.id)"
+          @click.self="pdtDetailHandler(item.id)"
         >
           <td>
             <img
@@ -44,7 +44,7 @@
               <span class="mr-20">수량</span>
               <button
                 type="button"
-                @click="item.count == 1 ? count : item.count--"
+                @click="item.count == 1 ? item.count : item.count--"
               >
                 -
               </button>
@@ -97,7 +97,8 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { Basket } from "@/store/user";
 import { commonNumber, imageCheck } from "@/utils/common";
 import { computed, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -106,13 +107,11 @@ import { useStore } from "vuex";
 const store = useStore();
 const router = useRouter();
 
-const basketInfo = computed(() => {
-  return store.state.user.basketInfo;
-});
-let selectList = ref([]);
-// let selectListPrice = ref([]);
-let allCheckList = ref([]);
-let allSelectList = computed({
+const basketInfo = computed(() => store.state.user.basketInfo );
+const selectList = ref<string[]>([]);
+// const selectListPrice = ref([]);
+const allCheckList = ref<string[]>([]);
+const allSelectList = computed({
   get() {
     return selectList.value.length === allCheckList.value.length;
   },
@@ -120,14 +119,14 @@ let allSelectList = computed({
     selectList.value = e ? allCheckList.value : [];
   },
 });
-let resultInfo = reactive({
+const resultInfo = reactive({
   allPrice: 0,
   delivery: 3000,
 });
 // 장바구니 목록 조회 api 호출
-const getBasketView = async () => {
+const getBasketView = async () : Promise<void> => {
   await store.dispatch("user/getBasket");
-  basketInfo.value.forEach((el) => {
+  basketInfo.value.forEach((el : Basket) => {
     el.price = 1000;
     allCheckList.value.push(`${el.id} ${el.price}`);
   });
@@ -138,14 +137,19 @@ const getBasketView = async () => {
 // };
 
 // 장바구니 삭제 api 호출
-const delBasketView = async (id) => {
+const delBasketView = async (id : number) : Promise<void> => {
   await store.dispatch("user/delBasket", id);
-  getBasketView();
+  await getBasketView();
 };
 
-// created
-getBasketView();
-watch(selectList, () => {
+//리스트 클릭시 프로덕트 상세페이지로
+const pdtDetailHandler  = (id : number) =>{
+  console.log(id);
+}
+
+await getBasketView();
+
+watch(()=>selectList.value, () => {
   let price = 0;
   selectList.value.forEach((el) => {
     price += Number(el.split(" ")[1]);
