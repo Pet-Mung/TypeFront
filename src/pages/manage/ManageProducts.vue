@@ -1,50 +1,47 @@
 <template>
-    <div class="flex_center mb-20">
-        <h3 class="fl text-center fs-30 pd-20">Manage Products</h3>
-        <div class="pb-20 btn_area_r">
-            <button class="confirm_btn" @click="createProduct()">상품 추가+</button>
-        </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Idx</th>
-                    <th>판매자</th>
-                    <th>동물</th>
-                    <th>카테고리</th>
-                    <th>상품이름</th>
-                    <th>만든 날짜</th>
-                    <th>수정한 날짜</th>
-                    <th>수정</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-if="displayedPosts.length == 0">
-                    <td colspan="10" class="no_data_table">
-                        <img src="@/assets/img/common/nodata_icon.png" alt="no_data" />
-                        <p>데이터가 없습니다.</p>
-                    </td>
-                </tr>
-                <tr v-for="product in displayedPosts" :key="product.id">
-                    <td>{{ product.id }}</td>
-                    <td>{{ product.user_name }}</td>
-                    <td>{{ product.animal_category }}</td>
-                    <td>{{ product.category }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.created_at?.split("T")[0] }}</td>
-                    <td>
-                        {{
-                            product.updated_at == null
-                                ? "-"
-                                : product.updated_at?.split("T")[0]
-                        }}
-                    </td>
-                    <td @click="modifyProduct(product.id)">
-                        <img class="edit_icon" src="@/assets/img/edit_icon.png" alt="수정 버튼" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="pb-20 btn_area_r">
+        <button class="confirm_btn" @click="createProduct()">상품 추가+</button>
     </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Idx</th>
+                <th>판매자</th>
+                <th>동물</th>
+                <th>카테고리</th>
+                <th>상품이름</th>
+                <th>만든 날짜</th>
+                <th>수정한 날짜</th>
+                <th>수정</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-if="displayedPosts.length == 0">
+                <td colspan="10" class="no_data_table">
+                    <img src="@/assets/img/common/nodata_icon.png" alt="no_data" />
+                    <p>데이터가 없습니다.</p>
+                </td>
+            </tr>
+            <tr v-for="product in displayedPosts" :key="product.id">
+                <td>{{ product.id }}</td>
+                <td>{{ product.user_name }}</td>
+                <td>{{ product.animal_category }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.created_at?.split("T")[0] }}</td>
+                <td>
+                    {{
+                        product.updated_at == null
+                            ? "-"
+                            : product.updated_at?.split("T")[0]
+                    }}
+                </td>
+                <td @click="modifyProduct(product.id)">
+                    <img class="edit_icon" src="@/assets/img/common/edit_icon.png" alt="수정 버튼" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <PagingView :currentPage="currentPage" :totalPages="totalPages" :isEmpty="isEmpty" @changePage="changePage" />
 </template>
 
@@ -74,9 +71,9 @@ const displayedPosts = computed<IProductsResult[]>(() => {
 });
 
 //상품 정보 전체 조회 api 호출
-const getAllProduct = async () : Promise<void> => {
+const getAllProduct = async (): Promise<void> => {
     try {
-        const result : IProductsResult[] = await productApi.viewAllProduct();
+        const result: IProductsResult[] = await productApi.viewAllProduct();
         list.value = sortData(result);
         isEmpty.value = list.value.length == 0 ? true : false;
     } catch (error) {
@@ -91,14 +88,14 @@ const createProduct = () => {
 };
 
 // 수정하기 이벤트리스너
-const modifyProduct = (id : number) => {
+const modifyProduct = (id: number) => {
     window.sessionStorage.setItem("click_pdt_idx", String(id));
     router.push(`products/${id}`);
 };
 
 //페이지 변경
-const changePage = (str : string | number ) => {
-    currentPage.value = pagingFn(currentPage.value,str);
+const changePage = (str: string | number) => {
+    currentPage.value = pagingFn(currentPage.value, str);
 };
 
 // created

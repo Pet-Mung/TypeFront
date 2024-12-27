@@ -54,21 +54,25 @@
       <button type="button" class="confirm_btn" @click="modifyBtn">확인</button>
     </div>
   </div>
+  <modal-alert 
+      :isVisible="dialog.isVisible" 
+      :isBtn="true" 
+      :content="dialog.content"
+      @closeDialogHandler="closeDialogHandler" />
 </template>
 
 <script setup lang="ts">
-import api from "@/api/apiUser.js";
+import api from "@/api/apiUser";
 import { reactive, computed, onBeforeMount, ref } from "vue";
 import {
   emailCheck,
   getItemWithExpireTime,
   nameCheck,
   phoneCheck,
-} from "@/utils/common.js";
+} from "@/utils/common";
 import { useRoute, useRouter } from "vue-router";
 import { IProfile, IExtendInfo } from "@/types/user";
-
-
+import ModalAlert from "@/components/modal/ModalAlert.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -81,7 +85,10 @@ const info = reactive<IProfile>({
   zonecode: "",
   is_admin: "",
 });
-
+const dialog = ref({
+    isVisible: false,
+    content: "",
+})
 const originInfo = ref<IExtendInfo | null>(null);
 const isCheck = ref(false);
 const modifyBool = ref(false);
@@ -126,7 +133,8 @@ const putUserInfo = async () : Promise<void> => {
     if (info.phone_number == undefined) info.address = '';
     const result = await api.putOnlyUser(user_idx.value, info);
     if (result.status == "200") {
-      alert(result.detail);
+      dialog.value.content = result.detail;
+      dialog.value.isVisible = true;
       if (mainPath.value == "manage") router.push("/manage/users");
       else router.push("mypage");
     }
@@ -138,25 +146,30 @@ const putUserInfo = async () : Promise<void> => {
 // 이메일 확인
 const isEmailCheck = () => {
   if (info.email === "") {
-    alert("이메일을 입력해주세요.");
+    dialog.value.content = "이메일을 입력해주세요.";
+    dialog.value.isVisible = true;
   } else if (!emailCheck(info.email)) {
-    alert("이메일 형식을 확인하세요.");
+    dialog.value.content = "이메일 형식을 확인하세요.";
+    dialog.value.isVisible = true;
   } else isNameCheck();
 };
 
 // 이름 확인
 const isNameCheck = () => {
   if (info.user_name === "") {
-    alert("아이디를 입력해주세요.");
+    dialog.value.content = "아이디를 입력해주세요.";
+    dialog.value.isVisible = true;
   } else if (!nameCheck(info.user_name)) {
-    alert("아이디를 확인하세요.");
+    dialog.value.content = "아이디를 확인하세요.";
+    dialog.value.isVisible = true;
   } else isPhoneCheck();
 };
 
 //핸드폰 번호 확인
 const isPhoneCheck = () => {
   if (!phoneCheck(info.phone_number)) {
-    alert("핸드폰 번호를 확인하세요.");
+    dialog.value.content = "핸드폰 번호를 확인하세요.";
+    dialog.value.isVisible = true;
   } else isCheck.value = true;
 };
 
@@ -175,12 +188,13 @@ const modifyBtn = () : void => {
     } else modifyBool.value = true;
   }
 
-  if (modifyBool) {
+  if (modifyBool.value) {
     // 이메일, 아이디 필수값
     isEmailCheck();
-    if (isCheck) putUserInfo();
+    if (isCheck.value) putUserInfo();
   } else {
-    alert("변경된 사항이 없습니다.");
+      dialog.value.content = "변경된 사항이 없습니다.";
+      dialog.value.isVisible = true;
   }
 };
 
@@ -194,6 +208,10 @@ const addressSearch = () => {
     },
   }).open();
 };
+
+const closeDialogHandler = () => {
+    dialog.value.isVisible = false;
+}
 
 await getUserInfo();
 </script>

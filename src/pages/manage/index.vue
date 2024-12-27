@@ -2,34 +2,47 @@
     <div class="pd-20">
         <h2 class="mb-20 ff_02 fl fs-40">Manage Dashboard</h2>
         <ul class="tab_cat_02">
-            <li :class="{ active: adminTab == 1 }" @click="selectAdminTab(1)">
-                <router-link to="/manage/products">Manage Products</router-link>
-            </li>
-            <li :class="{ active: adminTab == 2 }" @click="selectAdminTab(2)">
-                <router-link to="/manage/orders">Manage Orders</router-link>
-            </li>
-            <li :class="{ active: adminTab == 3 }" @click="selectAdminTab(3)">
-                <router-link to="/manage/users">Manage Users</router-link>
+            <li v-for="menu in manageMenu" :key="menu.key" :class="{ active: menu.isActive }" @click="selectAdminTab(menu.key)">
+                <router-link to="/manage/products">{{ menu.name }}</router-link>
             </li>
         </ul>
-        <router-view></router-view>
+        <div class="flex_center">
+            <h3 class="fl text-center fs-30 pd-20">{{ manageMenu[selectTab].name }}</h3>
+            <router-view></router-view>
+        </div>
+
     </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+interface IManageMenu {
+    key : number,
+    name : string,
+    isActive : boolean,
+    label : string, 
+}
+
 const route = useRoute();
-const store = useStore();
-const adminTab = computed(() =>  store.state.user.adminTab);
-const subPath = computed(() =>  route.path.split("/")[2]);
-const selectAdminTab = (num : number) => {
-    store.commit("user/setAdminTab", num);
+const selectTab = ref(1);
+const subPath = computed(() => route.path.split("/")[2]);
+const manageMenu : IManageMenu[] = [
+    { key : 1 , name : "상품/재고 관리" , isActive : false , label : "products"},
+    { key : 2 , name : "주문/결제 관리" , isActive : false , label : "orders"},
+    { key : 3 , name : "사용자 관리"    , isActive : false , label : "users"},
+]
+
+const selectAdminTab = (key : number) => {
+    selectTab.value = key;
+    manageMenu.map(item=>{
+        item.isActive = key === item.key;
+    })
 };
 // created
-if (subPath.value === 'products') selectAdminTab(1);
-else if (subPath.value === 'orders') selectAdminTab(2);
-else if (subPath.value === 'users') selectAdminTab(3);
+manageMenu.map((item)=>{
+    if( item.label === subPath.value ) selectAdminTab(item.key);
+});
+
 </script>
 
 <style lang="scss" scoped></style>

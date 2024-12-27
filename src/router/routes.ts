@@ -1,28 +1,5 @@
-// view
-// import UserView from "@/views/UserView.vue";
-
-// components
-
-// // user
-// import UserDelivery from "@/components/user/UserDelivery.vue";
-// import UserMypage from "@/components/user/UserMypage.vue";
-// import UserProfile from "@/components/user/UserProfile.vue";
-// import UserPurchase from "@/components/user/UserPurchase.vue";
-// import UserBasket from "@/components/user/UserBasket.vue";
-
-// // admin
-// import ManageDashboard from "@/components/manage/ManageDashboard.vue";
-// import ManageOrders from "@/components/manage/ManageOrders.vue";
-// import ManageProducts from "@/components/manage/ManageProducts.vue";
-// import ManageUsers from "@/components/manage/ManageUsers.vue";
-// import ProductItem from "@/components/manage/sub/ProductItem.vue";
-
-// //comn
-// import ComnNotFound from "@/components/comn/ComnNotFound.vue";
-
-//icon
-import iconView from "@/pages/icon/IconCopyright.vue";
 import { RouteRecordRaw } from "vue-router";
+
 const routes: Array<RouteRecordRaw> = [
   // 메인 페이지
   {
@@ -48,55 +25,57 @@ const routes: Array<RouteRecordRaw> = [
   //상품 페이지
   {
     path: "/products",
-    component:  ()=> import("@/pages/product/index.vue"),
+    component: () => import("@/pages/product/index.vue"),
     children: [
-      { path: "", component: ()=> import("@/pages/product/ProductList.vue") },
-      { path: ":id", component: ()=> import("@/pages/product/ProductList.vue") },
-      { path: "detail/:id", component: ()=> import("@/pages/product/ProductDetail.vue") },
+      { path: "", component: () => import("@/pages/product/ProductList.vue") },
+      { path: ":id", component: () => import("@/pages/product/ProductList.vue") },
+      { path: "detail/:id", component: () => import("@/pages/product/ProductDetail.vue") },
     ],
   },
-  // //유저 페이지
-  // {
-  //   path: "/user",
-  //   component: UserView,
-  //   children: [
-  //     { path: "mypage", component: UserMypage },
-  //     { path: "delivery", component: UserDelivery },
-  //     { path: "profile", component: UserProfile },
-  //     { path: "purchase", component: UserPurchase },
-  //     { path: "basket", component: UserBasket },
-  //   ],
-  // },
-  // //관리자 페이지
-  // {
-  //   path: "/manage",
-  //   component: ManageDashboard,
-  //   children: [
-  //     { path: "orders", component: ManageOrders },
-  //     {
-  //       path: "products",
-  //       children: [
-  //         { path: "", component: ManageProducts },
-  //         { path: ":id", component: ProductItem },
-  //       ],
-  //     },
-  //     {
-  //       path: "users",
-  //       // component: ManageUsers,
-  //       children: [
-  //         { path: "", component: ManageUsers },
-  //         { path: "profile", component: UserProfile },
-  //       ],
-  //     },
-  //   ],
-  // },
+  //유저 페이지
+  {
+    path: "/user",
+    component: () => import("@/pages/user/index.vue"),
+    children: [
+      { path: "mypage", component: () => import("@/pages/user/UserMypage.vue") },
+      { path: "delivery", component: () => import("@/pages/user/UserDelivery.vue") },
+      { path: "profile", component: () => import("@/pages/user/UserProfile.vue") },
+      { path: "purchase", component: () => import("@/pages/user/UserPurchase.vue") },
+      { path: "basket", component: () => import("@/pages/user/UserBasket.vue") },
+    ],
+  },
+  //관리자 페이지
+  {
+    path: "/manage",
+    component: () => import("@/pages/manage/index.vue"),
+    children: [
+      { path: "orders", component: () => import("@/pages/manage/ManageOrders.vue") },
+      {
+        path: "products",
+        children: [
+          { path: "", component: () => import("@/pages/manage/ManageProducts.vue") },
+          { path: ":id", component: () => import("@/pages/manage/product/ProductForm.vue") },
+        ],
+      },
+      {
+        path: "users",
+        // component: ManageUsers,
+        children: [
+          { path: "", component: () => import("@/pages/manage/ManageUser.vue") },
+          { path: "profile", component: () => import("@/pages/user/UserProfile.vue") },
+        ],
+      },
+    ],
+  },
+
   // icon 저작권 페이지
   {
     path: "/icons",
     name: "iconView",
-    component: iconView,
+    component: () => import("@/pages/icon/IconCopyright.vue"),
     props: true,
   },
+  // 404 페이지
   {
     path: "/:pathMatch(.*)*",
     component: () => import("@/pages/views/ViewNotFound.vue"),

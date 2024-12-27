@@ -83,9 +83,9 @@
 </template>
 
 <script setup lang="ts">
-import api from "@/api/apiUser.js";
+import api from "@/api/apiUser";
 import { computed, onBeforeMount, ref } from "vue";
-import SliderView from "@/components/comn/ComnSlider.vue";
+import SliderView from "@/components/common/ComnSlider.vue";
 import { useRouter } from "vue-router";
 import { getItemWithExpireTime } from "@/utils/common";
 import { useStore } from "vuex";

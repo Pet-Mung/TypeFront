@@ -57,24 +57,24 @@ const viewIndividualProduct = async (product_id : string) : Promise<IProductResu
 // };
 
 // // 용품 카테고리 조회 api 
-const getCategory = async () : Promise<any> => {
+const getCategory = async () : Promise<string[]> => {
   try {
-    const response = await API.get("category/");
+    const response = await API.get<string[]>("category/");
     return response.data;
   } catch (error) {
-    console.error(error);
+    return [];
   }
 };
 
-// // 동물 카테고리 조회 api 호출
-// const getAnimalCategory = async () => {
-//   try {
-//     const response = await API.get("category/pet");
-//     return response.data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+// 동물 카테고리 조회 api 호출
+const getAnimalCategory = async () : Promise<string[]>=> {
+  try {
+    const response = await API.get<string[]>("category/pet");
+    return response.data;
+  } catch (error) {
+    return [];
+  }
+};
 
 
 
@@ -86,5 +86,5 @@ export default {
 //   editProduct,
 //   deleteProduct,
   getCategory,
-//   getAnimalCategory,
+  getAnimalCategory,
 };

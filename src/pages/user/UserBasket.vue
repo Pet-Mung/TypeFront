@@ -89,7 +89,7 @@
       </p>
     </div>
     <div class="btn-area">
-      <button type="button" @click="router.push('/shop/products')">
+      <button type="button" @click="router.push('/products')">
         &lt; 쇼핑 계속하기
       </button>
       <button type="button">주문하기</button>

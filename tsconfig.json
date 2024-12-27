@@ -4,6 +4,7 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
+    "typeRoots":["node_modules/@types"],
     "moduleResolution": "node",
     "skipLibCheck": true,
     "esModuleInterop": true,
