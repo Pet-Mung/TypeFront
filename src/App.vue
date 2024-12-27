@@ -24,8 +24,8 @@ import API from "./api/apiAuth";
 import { getItemWithExpireTime } from "@/utils/common";
 import { useStore } from "vuex";
 
-import ComnHeader from "@/components/common/ComnHeader.vue";
-import ComnFooter from "@/components/common/ComnFooter.vue";
+import ComnHeader from "@/components/layout/Header.vue";
+import ComnFooter from "@/components/layout/Footer.vue";
 
 
 const store = useStore();

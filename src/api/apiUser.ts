@@ -77,12 +77,12 @@ const getOnlyUser = async (user_id: string) => {
 // }
 
 // 회원 정보 삭제 api 호출
-const delOnlyUser = async (user_id: string) => {
+const delOnlyUser = async (user_id: string) : Promise<number> => {
     try {
         const response = await API.delete<ApiResponse<any>>(`user/${user_id}`);
-        return response.data;
-    } catch (error) {
-        console.error(error);
+        return response.status;
+    } catch (error : any) {
+        return error.response ? error.response.status : 404;
     }
 }
 export default {

@@ -16,15 +16,26 @@ export interface ILoginInfo {
 
 export interface IUsers {
   id: number;
-  username: string;
+  username?: string;
+  user_name?: string;
   email: string;
+  created_at : datetime;
+  updated_at : datetime;
+  address : string;
+  phone_number : string;
+  is_active : string;
   // 다른 사용자 정보 필드 추가
 }
 
 export interface IUser {
   id: number;
-  username: string;
+  user_name: string;
   email: string;
+  created_at : datetime;
+  updated_at : datetime;
+  address : string;
+  phone_number : string;
+  is_active : string;
   // 다른 사용자 정보 필드 추가
 }
 

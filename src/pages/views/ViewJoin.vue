@@ -86,7 +86,7 @@
       </div>
     </transition>
   </div>
-  <modal-comn 
+  <modal-alert 
     :isVisible="dialog.isVisible"
     :isBtn="true"
     :content="dialog.content"
@@ -101,7 +101,7 @@ import api from "@/api/apiUser";
 import { emailCheck, nameCheck, passwordCheck } from "@/utils/common";
 import { useRouter } from "vue-router";
 import JoinSelect from "./ViewJoinSelect.vue";
-import ModalComn from "@/components/modal/ModalComn.vue"; 
+import ModalAlert from "@/components/modal/ModalAlert.vue"; 
 const router = useRouter();
 const isCheck = reactive({
   isPw: false,

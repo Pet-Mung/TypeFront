@@ -67,11 +67,6 @@ let bannerData : IBanner[] = [
 }
 
 .main-banner {
-  // background-image: url("@/assets/img/cat.jpg");
-  // background-repeat: no-repeat;
-  // background-position: center;
-  // background-size: cover;
-  /* background-color: bisque; */
   height: 300px;
   .flex {
     height: 100%;

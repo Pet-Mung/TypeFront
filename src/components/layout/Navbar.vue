@@ -56,7 +56,7 @@
       >
         <router-link to="/user/basket"
           ><img
-            src="@/assets/img/cart.png"
+            src="@/assets/img/common/cart.png"
             class="sm_icon"
           />BASKET</router-link
         >
@@ -68,7 +68,7 @@
       >
         <router-link to="/user/mypage"
           ><img
-            src="@/assets/img/mypage.png"
+            src="@/assets/img/common/mypage.png"
             class="sm_icon"
           />MY PAGE</router-link
         >

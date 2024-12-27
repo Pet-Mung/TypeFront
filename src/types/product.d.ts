@@ -3,11 +3,14 @@ export interface IProductsResult {
     updated_at: datetime,
     thumbnail: string,
     name: string,
+    user_name? : string,
     animal_category: string,
     category: string,
     price: number,
     id : number,
     isCart? : boolean,
+    updatedNumA? : number,
+    updatedNumB? : number,
 }
 
 export interface IProductResult {

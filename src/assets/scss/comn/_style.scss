@@ -175,7 +175,7 @@ select {
   line-height: 40px;
   padding: 0 20px 0 10px;
   font-size: 100%;
-  background: #fff url("@/assets/img/icon_select_arrow.png") no-repeat right
+  background: #fff url("@/assets/img/common/icon_select_arrow.png") no-repeat right
     10px center;
   background-size: 11px;
   border: 0;
@@ -280,15 +280,15 @@ input[type="radio"] + label {
   display: inline-block;
   padding-left: 32px;
   line-height: 20px;
-  background: url("@/assets/img/radio_off.png") 0 center no-repeat;
+  background: url("@/assets/img/common/radio_off.png") 0 center no-repeat;
   background-size: 20px 20px;
   cursor: pointer;
 }
 input[type="radio"]:checked + label {
-  background-image: url("@/assets/img/radio_on.png");
+  background-image: url("@/assets/img/common/radio_on.png");
 }
 input[type="radio"]:disabled + label {
-  background-image: url("@/assets/img/radio_off.png");
+  background-image: url("@/assets/img/common/radio_off.png");
   opacity: 0.5;
 }
 

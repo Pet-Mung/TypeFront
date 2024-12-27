@@ -15,6 +15,7 @@ export interface IUserStore {
   joinFlag: number;
   basketInfo: Basket[],
   adminTab: number,
+  fetchStatus : number,
 }
 
 
@@ -26,6 +27,7 @@ const user: Module<IUserStore, RootState> = {
     joinFlag: 1,
     basketInfo: [],
     adminTab: 1,
+    fetchStatus : 200,
   }),
   mutations: {
     setLoginStatus(state: IUserStore, payload: boolean) {
@@ -42,6 +44,10 @@ const user: Module<IUserStore, RootState> = {
     setBasketInfo(state: IUserStore, payload : Basket[]) {
       state.basketInfo = payload;
     },
+    //삭제 등 http status로 에러값 구별
+    setFetchStatus(state: IUserStore, payload : number) {
+      state.fetchStatus = payload;
+    }
   },
   actions: {
     async getLoginUser(
@@ -104,18 +110,15 @@ const user: Module<IUserStore, RootState> = {
     //     console.error(error);
     //   }
     // },
-    //회원탈퇴
-    // async delUserInfo(context: ActionContext<any, RootState>, userId: string) {
-    //   try {
-    //     const result = await userApi.delOnlyUser(userId);
-    //     console.log(result);
-    //     if (result.status == "404") {
-    //       alert(result.detail);
-    //     }
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
+    // 회원탈퇴
+    async delUserInfo(context: ActionContext<any, RootState>, userId: string) {
+      try {
+        const status = await userApi.delOnlyUser(userId);
+        context.commit("setFetchStatus",status);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   }
 }
 

@@ -21,7 +21,6 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
-// import findPw from './sub/ModalFindPw.vue';
 import ModalFrame from './ModalFrame.vue';
 const props = defineProps({
     isVisible: { type: Boolean },

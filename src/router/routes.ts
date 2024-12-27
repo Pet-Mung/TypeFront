@@ -21,7 +21,7 @@
 // import ComnNotFound from "@/components/comn/ComnNotFound.vue";
 
 //icon
-import iconView from "@/components/common/ComnIcon.vue";
+import iconView from "@/pages/icon/IconCopyright.vue";
 import { RouteRecordRaw } from "vue-router";
 const routes: Array<RouteRecordRaw> = [
   // 메인 페이지

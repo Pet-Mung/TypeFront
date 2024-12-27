@@ -22,12 +22,12 @@
             </li>
         </ul>
     </div>
-    <ComnList :list="products" :tabChange="animalTab" />
+    <pdt-list-component :list="products" :tabChange="animalTab" />
 </template>
 
 <script setup lang="ts">
 import productApi from "@/api/apiProduct";
-import ComnList from "@/components/common/ComnList.vue";
+import PdtListComponent from "@/components/pages/product/PdtListComponent.vue";
 import { computed, onMounted, onUpdated, ref } from "vue";
 import { useStore } from "vuex";
 import { sortData } from "@/utils/common";

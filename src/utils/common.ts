@@ -1,5 +1,5 @@
 import router from "@/router";
-
+import { IProductsResult } from "@/types/product";
 //현재 시간과 sessionStorage 시간 비교;
 export function getItemWithExpireTime(keyName : string) {
   const objString = window.sessionStorage.getItem(keyName);
@@ -52,10 +52,10 @@ export function phoneCheck(phone_number : string) {
 
 // 데이터 소팅하기
 // 만든날짜, 업데이트날짜를 기준으로 최근과 가까운 날짜 순
-export function sortData(data : any) {
+export function sortData(data : IProductsResult[]) {
   let sortArr = [];
   const pattern = /[\D]/gi;
-  sortArr = data.sort((a :any, b :any) => {
+  sortArr = data.sort((a :IProductsResult, b :IProductsResult) => {
     const createdNumA = a.created_at.replaceAll(pattern, "");
     const updatedNumA =
       a.updated_at == null
@@ -68,9 +68,7 @@ export function sortData(data : any) {
         : b.updated_at.replaceAll(pattern, "") | 0;
     const amax = createdNumA > updatedNumA ? createdNumA : a.updatedNumA;
     const bmax = createdNumB > updatedNumB ? createdNumB : a.updatedNumB;
-    if (amax < bmax) return 1;
-    else if (amax > bmax) return -1;
-    else 0;
+    return amax < bmax ? 1 : amax > bmax ? -1 : 0;
   });
   return sortArr;
 }
@@ -84,4 +82,11 @@ export function imageCheck(imgSrc:string) {
   else {
     return require("@/assets/img/default.png");
   }
+}
+
+export function pagingFn (currPage : number, str : string | number) : number {
+  if (str == "prev") return currPage - 1;
+  else if (str == "next") return currPage + 1;
+  else if(typeof str === "number") return str;
+  return currPage;
 }

@@ -78,7 +78,7 @@ let count = ref(1); // 구매갯수
 let selectTab = ref(1);
 
 //상품 정보 개별 조회 api 호출
-const getOnlyProduct = async () => {
+const getOnlyProduct = async () : Promise<void> => {
     try {
        const result : IProductResult  | null = await productApi.viewIndividualProduct(productId.value || "");
         if(result) product.value = result;

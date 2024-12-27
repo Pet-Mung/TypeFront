@@ -2,7 +2,7 @@
   <div>
     <ul class="mb-30" v-if="props.list.length == 0">
       <li class="no_data">
-        <img src="@/assets/img/nodata_icon.png" alt="no_data" />
+        <img src="@/assets/img/common/nodata_icon.png" alt="no_data" />
         <p>데이터가 없습니다.</p>
       </li>
     </ul>
@@ -61,6 +61,7 @@ import {
   getItemWithExpireTime,
   commonNumber,
   imageCheck,
+  pagingFn,
 } from "@/utils/common";
 import PagingView from "@/components/common/ComnPaging.vue";
 import { computed, defineProps, ref, watch } from "vue";
@@ -104,7 +105,7 @@ const user_idx = computed(() => {
 });
 // const arr = ref([...props.list]);
 // 장바구니 조회 api 호출
-const getBasketView = async () => {
+const getBasketView = async () : Promise<void> => {
   await store.dispatch("user/getBasket");
   // if (basketInfo.value.length >= 1) {
   //   console.log('aa')
@@ -121,7 +122,7 @@ const getBasketView = async () => {
 };
 
 // 장바구니 추가 api 호출
-const addCartBtn = async (pdt : IProductsResult) => {
+const addCartBtn = async (pdt : IProductsResult) : Promise<void> => {
   let count = 1;
   const addBasketinfo = {
     productId: pdt.id,
@@ -132,9 +133,8 @@ const addCartBtn = async (pdt : IProductsResult) => {
   // getBasketView();
 };
 // 장바구니 삭제 api 호출
-const delCartBtn = (pdt : IProductsResult) => {
-  console.log("basketInfo", basketInfo.value);
-  const nameArr = basketInfo.value.filter((item: Basket) => {
+const delCartBtn = (pdt : IProductsResult) : void => {
+  const nameArr : Basket[] = basketInfo.value.filter((item: Basket) => {
     return pdt.name == item.product_name;
   });
   // nameArr.forEach((item) => {
@@ -153,9 +153,7 @@ const clickProduct = (id : number) => {
 
 //페이지 변경
 const changePage = (str : string | number) => {
-  if (str == "prev") currentPage.value--;
-  else if (str == "next") currentPage.value++;
-  else if(typeof str === "number") currentPage.value = str;
+  currentPage.value = pagingFn(currentPage.value,str);
 };
 
 // const selectListChange = (e,id) => {

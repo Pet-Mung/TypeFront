@@ -16,7 +16,7 @@
     </div>
   </div>
   <modal-pw :isVisible="dialog.isPwVisible" @closeDialogHandler="closeDialogHandler" width="90%" maxWidth="400px" />
-  <modal-comn 
+  <modal-alert 
     :isVisible="dialog.isVisible" 
     :isBtn="true"
     :content="dialog.content"
@@ -29,7 +29,7 @@
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import ModalComn from "@/components/modal/ModalComn.vue"; 
+import ModalAlert from "@/components/modal/ModalAlert.vue"; 
 import ModalPw from "@/components/modal/sub/ModalFindPw.vue"; 
 
 const router = useRouter();
