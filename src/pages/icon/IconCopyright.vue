@@ -147,7 +147,14 @@
                     class="bg_icon" />Icon by
                 Creative Stall Premium</a>
         </div>
-
+        <div>
+            <a href="https://www.flaticon.com/kr/free-icons/-" title="- 아이콘"><img src="@/assets/img/products/category_dog.png"
+                    class="bg_icon" /> 아이콘 제작자: Chanut-is-Industries - Flaticon</a>
+        </div>
+        <div>
+            <a href="https://www.flaticon.com/kr/free-icons/" title=" 아이콘"> <img src="@/assets/img/products/category_cat.png"
+                    class="bg_icon" />아이콘 제작자: Smashicons - Flaticon</a>
+        </div>
         <!-- 미사용 -->
 
         <div>
@@ -155,6 +162,7 @@
                     class="bg_icon" />소녀 아이콘
                 제작자: Freepik - Flaticon</a>
         </div>
+
     </div>
 </template>
 

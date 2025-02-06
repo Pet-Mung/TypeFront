@@ -38,16 +38,16 @@
     </div>
     <div class="user_input radio_area" v-if="mainPath == 'manage'">
       <label>판매자 여부</label>
-      <input type="radio" name="isSeller" id="se_true" value="se_true" />
+      <input type="radio" name="isSeller" id="se_true" v-model="info.is_seller" :value="true" />
       <label for="se_true">O</label>
-      <input type="radio" name="isSeller" id="se_false" value="se_false" />
+      <input type="radio" name="isSeller" id="se_false" v-model="info.is_seller" :value="false" />
       <label for="se_false">X</label>
     </div>
     <div class="user_input radio_area" v-if="mainPath == 'manage'">
       <label>관리자 여부</label>
-      <input type="radio" name="isAdmin" id="ad_true" v-model="info.is_admin" value="true" />
+      <input type="radio" name="isAdmin" id="ad_true" v-model="info.is_admin" :value="true" />
       <label for="ad_true">O</label>
-      <input type="radio" name="isAdmin" id="ad_false" v-model="info.is_admin" value="false" />
+      <input type="radio" name="isAdmin" id="ad_false" v-model="info.is_admin" :value="false" />
       <label for="ad_false">X</label>
     </div>
     <div class="confirm_box">
@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 import api from "@/api/apiUser";
-import { reactive, computed, onBeforeMount, ref } from "vue";
+import { reactive, computed, ref } from "vue";
 import {
   emailCheck,
   getItemWithExpireTime,
@@ -83,7 +83,9 @@ const info = reactive<IProfile>({
   detail_address: "",
   phone_number: "",
   zonecode: "",
-  is_admin: "",
+  is_admin: false,
+  is_seller: false,
+  is_active: true,
 });
 const dialog = ref({
     isVisible: false,
@@ -92,12 +94,13 @@ const dialog = ref({
 const originInfo = ref<IExtendInfo | null>(null);
 const isCheck = ref(false);
 const modifyBool = ref(false);
+const modifySuccess = ref(false);
 const mainPath = computed(() => route.path.split("/")[1]);
 const user_idx = computed(() => {
   if (mainPath.value == "manage") {
     return window.sessionStorage.getItem("click_idx");
   } else {
-    return getItemWithExpireTime("userInfoObj")?.user_idx;
+    return getItemWithExpireTime("userInfoObj")?.user_id;
   }
 });
 // user 정보 조회 api 호출
@@ -109,8 +112,9 @@ const getUserInfo = async () : Promise<void> => {
     const { user_name, email, phone_number, address, is_admin } = data;
     info.user_name = user_name;
     info.email = email;
-    info.phone_number = phone_number;
+    info.phone_number = phone_number === 'None' ? "" : phone_number;
     info.is_admin = is_admin;
+    
     if (address) {
       const [mainAddr, subAddr] = address.split("&");
       info.address = mainAddr || "";
@@ -128,19 +132,23 @@ const getUserInfo = async () : Promise<void> => {
 // user 정보 수정 api 호출
 const putUserInfo = async () : Promise<void> => {
   try {
-    if (info.address == undefined) info.address = '';
-    if (info.detail_address == undefined) info.detail_address = '';
-    if (info.phone_number == undefined) info.address = '';
+    if (!info.address) info.address = '';
+    if (!info.detail_address) info.detail_address = '';
+    if (!info.phone_number) info.phone_number = '';
     const result = await api.putOnlyUser(user_idx.value, info);
-    if (result.status == "200") {
-      dialog.value.content = result.detail;
-      dialog.value.isVisible = true;
-      if (mainPath.value == "manage") router.push("/manage/users");
-      else router.push("mypage");
+    if (result.status === "200") {
+      dialog.value.content = "수정이 완료되었습니다.";
+      modifySuccess.value = true;
+    } 
+    dialog.value.isVisible = true;
+  } catch (error : any) {
+    if(error.response?.status === 404){
+      dialog.value.content = "중복된 아이디입니다. 다시 입력해주세요.";
+    }else{
+      dialog.value.content = "실패하였습니다. 다시 시도해주세요.";
     }
-  } catch (error) {
-    console.error(error);
-  }
+    dialog.value.isVisible = true;
+  } 
 };
 
 // 이메일 확인
@@ -197,9 +205,23 @@ const modifyBtn = () : void => {
       dialog.value.isVisible = true;
   }
 };
+const loadDaumPostcodeScript = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (window.daum && window.daum.Postcode) {
+      resolve(); 
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Failed to load Daum Postcode"));
+    document.head.appendChild(script);
+  });
+};
 
 // 주소 검색 다음 api 사용
-const addressSearch = () => {
+const addressSearch = async () => {
+  await loadDaumPostcodeScript();
   new window.daum.Postcode({
     oncomplete: (data) => {
       info.zonecode = data.zonecode;
@@ -211,6 +233,10 @@ const addressSearch = () => {
 
 const closeDialogHandler = () => {
     dialog.value.isVisible = false;
+    if(modifySuccess.value){
+      if (mainPath.value == "manage") router.push("/manage/users");
+      else router.push("mypage");
+    }
 }
 
 await getUserInfo();

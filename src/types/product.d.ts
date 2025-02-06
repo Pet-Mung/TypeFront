@@ -14,11 +14,18 @@ export interface IProductsResult {
 }
 
 export interface IProductResult {
-    image: array,
+    image: [],
     animal_category: string,
     category: string,
-    user_name: string,
+    user_name?: string,
     name: string,
     price: number,
     content?: string,
+    count? : number,
 }
+
+export interface IPostProduct {
+    product_create? : IProductResult;
+    updated_product? : IProductResult;
+  }
+  

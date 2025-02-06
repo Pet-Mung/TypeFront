@@ -23,24 +23,25 @@ const joinUser = async (info: IJoinInfo): Promise<ApiResponse<any> | undefined> 
 }
 
 // 로그인 api 호출
-const loginUser = async (info: ILoginInfo): Promise<ApiResponse<IResultLogin>> => {
+const loginUser = async (info: ILoginInfo): Promise<IResultLogin> => {
     try {
         const curi = `grant_type=${info.grant_type}&username=${info.username}&password=${info.password}&scope=${info.scope}&client_id=${info.client_id}&client_secret=${info.client_secret}`;
-        const response = await API.post<ApiResponse<IResultLogin>>(`user/login`, curi);
+        const response = await API.post<IResultLogin>(`user/login`, curi);
         return response.data;
     } catch (error) {
-        const err = error as AxiosError;
-        if (err.response) {
-            const data = err.response.data as ApiResponse;
-            if (err.response.status === 401) {
-                alert(data.detail)
-            } 
-        }
-        return {
-            success: false,
-            message: 'Login failed due to an error',
-            data: {} as IResultLogin, // IResultLogin 타입의 빈 객체로 반환
-        };
+        // const err = error as AxiosError;
+        // if (err.response) {
+        //     const data = err.response.data as ApiResponse;
+        //     if (err.response.status === 401) {
+        //         alert(data.detail)
+        //     } 
+        // }
+        // return {
+        //     success: false,
+        //     message: 'Login failed due to an error',
+
+        // };
+        throw new Error('erorr');
  
     }
 }

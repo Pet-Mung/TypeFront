@@ -4,3 +4,8 @@ export interface ApiResponse<T = any> {
     data: T;
     detail? : string;
 }
+
+export interface ApiErrorResponse<T = any> {
+    data : T;
+    status : number;
+}

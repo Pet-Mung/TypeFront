@@ -18,10 +18,10 @@ export interface IUsers {
   id: number;
   email: string;
   created_at : datetime;
-  updated_at : datetime;
-  address : string;
+  updated_at : datetime | null;
+  address : string | null;
   phone_number : string;
-  is_active : string;
+  is_active : boolean;
   // 다른 사용자 정보 필드 추가
 }
 export interface IExtendUser extends IUsers {
@@ -30,7 +30,7 @@ export interface IExtendUser extends IUsers {
 }
 export interface IExtendInfo extends IUsers {
   user_name: string;
-  is_admin : string;
+  is_admin : boolean;
 }
 export interface IResultLogin {
   access_token: string;
@@ -54,13 +54,15 @@ export interface IPurchaseData {
 
 // profile
 export interface IProfile {
-  password?: "",
-  password_check?: "",
+  password?: string,
+  password_check?: string,
   user_name: string;
   email: string;
   address: string;
   detail_address: string;
   phone_number: string;
   zonecode : string;
-  is_admin : string;
+  is_admin : boolean;
+  is_seller : boolean;
+  is_active : boolean;
 }

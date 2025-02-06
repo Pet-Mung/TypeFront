@@ -22,9 +22,10 @@
         <div class="title_s pd-10">
           <img src="@/assets/img/common/add_cart.png" alt="장바구니" />
           <h4 class="fs-18 mlr-10">장바구니</h4>
-          <button @click="router.push('basket')" class="fb">더 보기 +</button>
+          <button @click="router.push('basket')" class="fb" v-if="basketInfo.length > 0">더 보기 +</button>
         </div>
-        <SliderView :flag="flag" :sliderData="basketInfo" />
+        <SliderView :flag="flag" :sliderData="basketInfo" v-if="basketInfo.length > 0"/>
+        <ComnNodata class="pd-30" :list="basketInfo" content="장바구니에 상품을 추가해주세요." />
       </div>
     </div>
     <div class="pd-30 lect_type_02">
@@ -32,9 +33,10 @@
         <div class="title_s pd-10">
           <img src="@/assets/img/purchase_icon.png" alt="구매내역" />
           <h4 class="fs-18 mlr-10">구매내역</h4>
-          <button @click="router.push('purchase')" class="fb">더 보기 +</button>
+          <button @click="router.push('purchase')" class="fb" v-if="basketInfo.length > 0">더 보기 +</button>
         </div>
-        <SliderView :flag="flag" :sliderData="purchaseData" />
+        <SliderView :flag="flag" :sliderData="purchaseData"  v-if="basketInfo.length > 0"/>
+        <ComnNodata class="pd-30" :list="basketInfo" content="지금 당장 구매해보세요!" />
       </div>
     </div>
     <div class="pd-30">
@@ -84,20 +86,21 @@
 
 <script setup lang="ts">
 import api from "@/api/apiUser";
-import { computed, onBeforeMount, ref } from "vue";
+import { computed, ref } from "vue";
 import SliderView from "@/components/common/ComnSlider.vue";
 import { useRouter } from "vue-router";
 import { getItemWithExpireTime } from "@/utils/common";
 import { useStore } from "vuex";
-import { IPurchaseData } from "@/types/user";
+import { IExtendInfo, IPurchaseData } from "@/types/user";
+import ComnNodata from "@/components/common/ComnNodata.vue";
 
-export interface IUserName {
+interface IUserName {
     user_name: string | undefined;
 }
 
 const store =useStore();
 const router = useRouter();
-const data = ref<IUserName | null>(null);
+const data = ref<IExtendInfo | null>(null);
 const flag = 1; // slider type
 const purchaseData  : IPurchaseData[] = [
   {
@@ -125,34 +128,36 @@ const purchaseData  : IPurchaseData[] = [
 ];
 const basketInfo = computed(()=> store.state.user.basketInfo);
 
-// const imgAdd = (image) => {
-//   this.imgSrc = require(image);
-// }
+// // const imgAdd = (image :any) => {
+// //   this.imgSrc = require(image);
+// // }
 const user_idx = computed(() => {
-  return getItemWithExpireTime("userInfoObj")?.user_idx;
+  return getItemWithExpireTime("userInfoObj")?.user_id;
 });
 
 const getUserInfo = async () => {
   try {
     const result = await api.getOnlyUser(user_idx.value);
+    console.log(result);
     data.value = result[0];
-    // data.value = result;
   } catch (error) {
     console.error(error);
   }
 };
-const getBasketView = async () => {
-  await store.dispatch("user/getBasket");
+const getBasketView = () => {
+  store.dispatch("user/getBasket");
 };
 
 
 const deleteUserInfo = () => {
   if (confirm("정말 삭제하시겠습니까?") ==true){
     store.dispatch('user/delUserInfo',user_idx.value);
-    store.commit('login/setLoginStatus',false);
     window.sessionStorage.clear();
+    store.commit('login/setLoginStatus',false);
     router.push('/');
   }
 }
-await Promise.all([ getUserInfo(),getBasketView()]);
+getBasketView();
+getUserInfo();
+
 </script>

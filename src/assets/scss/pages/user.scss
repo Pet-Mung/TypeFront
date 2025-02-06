@@ -9,8 +9,8 @@
 }
 .user_input {
   margin-bottom: 20px;
-  width: 80%;
-  max-width: 800px;
+  width: 100%;
+  max-width: 400px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -21,6 +21,7 @@
     margin-right: 13px;
     font-size: 1em;
     width: 100px;
+    flex-shrink: 0;
   }
   img {
     position: absolute;
@@ -40,6 +41,7 @@
     }
   }
 }
+
 .confirm_box {
   display: flex;
   flex-direction: column;
@@ -190,6 +192,7 @@
     }
   }
 }
+
 // profile
 
 .profile_wrap {
@@ -202,12 +205,24 @@
   input:not([type="radio"]) {
     width: 287px;
   }
+  label{
+    flex-shrink: 0;
+  }
+  input{
+    flex-shrink: 0;
+  }
   .input_addr {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
     input:not([name="detailAddr"]) {
       cursor: pointer;
     }
     input[name="zoneCode"] {
-      width: 170px;
+      flex-shrink: 1;
+      width: 180px;
     }
   }
   .radio_area{

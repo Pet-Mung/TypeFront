@@ -3,7 +3,7 @@
     <Carousel v-bind="setting" :breakpoints="breakpoints">
       <Slide class="" v-for="(slide,idx) in transformSliderData" :key="idx">
         <div class="carousel__item">
-          <img :src="imageCheck(slide.image || '')" :alt="slide.name" class="slide_img" />
+          <img v-lazy="slide.image || ''" :alt="slide.name" class="slide_img" />
           <p>{{ slide.name || slide.product_name }}</p>
           <p class="fs-15 mt-10">{{ slide.count }} 개</p>
         </div>
@@ -20,7 +20,7 @@
       <!-- -->
       <Slide class="" v-for="(slide, idx) in transformSliderData" :key="idx">
         <div class="carousel__item">
-          <img :src="imageCheck(slide.image || '')" :alt="`상품사진 ${idx}`" class="slide_img" />
+          <img v-lazy="slide.image || ''" :alt="`상품사진 ${idx}`" class="slide_img" />
         </div>
       </Slide>
       <template #addons>
@@ -49,7 +49,6 @@
 
 <script setup lang="ts">
 import { IImage } from "@/types";
-import { imageCheck } from "@/utils/common";
 import { computed, defineProps } from "vue";
 import { Carousel, Slide, Navigation, Pagination } from "vue3-carousel";
 
@@ -75,7 +74,6 @@ const lenChk = computed(() => {
 // const customStyle = (bg) =>{
 //   return {'--bg' : bg};
 // }
-console.log(transformSliderData);
 //mypage slide setting
 const setting = {
   itemsToShow: 3,

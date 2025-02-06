@@ -1,6 +1,6 @@
 <template>
     <div class="pb-20 btn_area_r">
-        <button class="confirm_btn" @click="createProduct()">상품 추가+</button>
+        <button class="btn_type_02" @click="createProduct()">상품 등록</button>
     </div>
     <table class="table table-bordered">
         <thead>
@@ -16,12 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-if="displayedPosts.length == 0">
-                <td colspan="10" class="no_data_table">
-                    <img src="@/assets/img/common/nodata_icon.png" alt="no_data" />
-                    <p>데이터가 없습니다.</p>
-                </td>
-            </tr>
+            <ComnNodata :list="displayedPosts" :isTable="true" />
             <tr v-for="product in displayedPosts" :key="product.id">
                 <td>{{ product.id }}</td>
                 <td>{{ product.user_name }}</td>
@@ -42,21 +37,23 @@
             </tr>
         </tbody>
     </table>
-    <PagingView :currentPage="currentPage" :totalPages="totalPages" :isEmpty="isEmpty" @changePage="changePage" />
+    <PagingView :currentPage="currentPage" :totalPages="totalPages" @changePage="changePage" />
 </template>
 
 <script setup lang="ts">
 import productApi from "@/api/apiProduct";
-import { pagingFn, sortData } from "@/utils/common";
+import { getItemWithExpireTime, sortData } from "@/utils/common";
 import PagingView from "@/components/common/ComnPaging.vue";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { IProductsResult } from "@/types/product";
+import ComnNodata from "@/components/common/ComnNodata.vue";
 const router = useRouter();
 const list = ref<IProductsResult[]>([]);
 const currentPage = ref(1); //현재 페이지 번호
 const postsperPage = 5; //한 페이지에 보여줄 게시글 갯수
-const isEmpty = ref(false); //데이터 빈 값 여부
+const isAdmin = computed(() => getItemWithExpireTime("userInfoObj")?.is_admin);
+const username = computed(() => getItemWithExpireTime("userInfoObj")?.username);
 const totalPages = computed(() => {
     //총 페이지 수
     return Math.ceil(list.value.length / postsperPage);
@@ -73,9 +70,14 @@ const displayedPosts = computed<IProductsResult[]>(() => {
 //상품 정보 전체 조회 api 호출
 const getAllProduct = async (): Promise<void> => {
     try {
-        const result: IProductsResult[] = await productApi.viewAllProduct();
-        list.value = sortData(result);
-        isEmpty.value = list.value.length == 0 ? true : false;
+        const result: IProductsResult[] = await productApi.viewAllProduct(null);
+        console.log(result);
+        if (isAdmin.value) {
+            list.value = sortData(result);
+        } else {
+            list.value = result.filter(item => { username.value == item.user_name });
+        }
+
     } catch (error) {
         console.error(error);
     }
@@ -83,21 +85,29 @@ const getAllProduct = async (): Promise<void> => {
 
 // 추가하기 이벤트리스너
 const createProduct = () => {
-    window.sessionStorage.removeItem("click_pdt_idx");
-    router.push(`products/0`);
+    router.push(`products/create`);
 };
 
 // 수정하기 이벤트리스너
 const modifyProduct = (id: number) => {
-    window.sessionStorage.setItem("click_pdt_idx", String(id));
     router.push(`products/${id}`);
 };
 
 //페이지 변경
-const changePage = (str: string | number) => {
-    currentPage.value = pagingFn(currentPage.value, str);
+const changePage = (page: number) => {
+    currentPage.value = page;
 };
 
 // created
 await getAllProduct();
 </script>
+<style lang="scss" scoped>
+.btn_type_02 {
+    box-shadow: none;
+    padding: 10px 15px;
+    font-family: (--pretend-font) !important;
+    font-size: 14px;
+    background: rgb(0, 0, 0) !important;
+    margin: 0 0 30px 0;
+}
+</style>

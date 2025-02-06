@@ -1,7 +1,7 @@
 <template>
   <div class="user_wrap">
     <div class="int-area">
-      <input type="text" id="username" required v-model.trim="info.username" autocomplete="off"/>
+      <input type="text" id="username" required v-model.trim="info.username" autocomplete="off" />
       <label for="username">ID</label>
     </div>
     <div class="int-area">
@@ -16,69 +16,74 @@
     </div>
   </div>
   <modal-pw :isVisible="dialog.isPwVisible" @closeDialogHandler="closeDialogHandler" width="90%" maxWidth="400px" />
-  <modal-alert 
-    :isVisible="dialog.isVisible" 
-    :isBtn="true"
-    :content="dialog.content"
-    :isOverlay="false"
-    @closeDialogHandler="closeDialogHandler" 
-    />
+  <modal-alert :isVisible="dialog.isVisible" :isBtn="true" :content="dialog.content" :isOverlay="false"
+    @closeDialogHandler="closeDialogHandler" />
 </template>
 
 <script setup>
 import { computed, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import ModalAlert from "@/components/modal/ModalAlert.vue"; 
-import ModalPw from "@/components/modal/sub/ModalFindPw.vue"; 
+import ModalAlert from "@/components/modal/ModalAlert.vue";
+import ModalPw from "@/components/modal/sub/ModalFindPw.vue";
 
 const router = useRouter();
 const store = useStore();
 let isCheck = reactive({
-    isNotNm : false,
-    isNotPw : false,
+  isNotNm: false,
+  isNotPw: false,
 })
 let info = reactive({
   password: "",
   username: "",
-  grant_type : "",
-  scope : "",
-  client_id : "",
-  client_secret : "",
+  grant_type: "",
+  scope: "",
+  client_id: "",
+  client_secret: "",
 });
 
 const dialog = ref({
-  state : 1,
-  isVisible : false,
-  isPwVisible : false,
-  content : "",
+  state: 1,
+  isVisible: false,
+  isPwVisible: false,
+  content: "",
 })
 
-const loginSuccess = computed(()=>{
+const loginSuccess = computed(() => {
   return store.state.user.loginSuccess;
 });
 
-if(loginSuccess.value){
-  alert('You have been logged out.');
-  store.commit('user/setLoginStatus',false);
+if (loginSuccess.value) {
+  dialog.value.content = "로그아웃되었습니다.";
+  dialog.value.isVisible = true;
+  store.commit('user/setLoginStatus', false);
   window.sessionStorage.clear();
 }
 
 // 로그인 로직 확인
 const loginCheck = async () => {
-    if(info.username === "") {
-        dialog.value.content = "ID를 입력해 주세요.";
-        dialog.value.isVisible = true;
-        isCheck.isNotNm = true;
-    } else if (info.password === "") {
-        dialog.value.content = "비밀번호를 입력해 주세요.";
-        dialog.value.isVisible = true;
-        isCheck.isNotNm = false;
-        isCheck.isNotPw = true;
-    } else {
-      await store.dispatch('user/getLoginUser',info);
-      if(loginSuccess.value) router.push('/');
+  if (info.username === "") {
+    dialog.value.content = "ID를 입력해 주세요.";
+    dialog.value.isVisible = true;
+    isCheck.isNotNm = true;
+  } else if (info.password === "") {
+    dialog.value.content = "비밀번호를 입력해 주세요.";
+    dialog.value.isVisible = true;
+    isCheck.isNotNm = false;
+    isCheck.isNotPw = true;
+  } else {
+    const result = await store.dispatch('user/getLoginUser', info);
+    if (loginSuccess.value) {
+      if (result.is_admin || result.is_seller) {
+        router.push('/manage');
+      }else{
+        router.push('/');
+      }
+    }else{
+      dialog.value.content = "아이디나 비밀번호가 일치하지 않습니다.";
+      dialog.value.isVisible = true;
     }
+  }
 }
 
 const closeDialogHandler = () => {

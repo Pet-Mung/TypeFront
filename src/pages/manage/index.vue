@@ -1,48 +1,61 @@
 <template>
     <div class="pd-20">
-        <h2 class="mb-20 ff_02 fl fs-40">Manage Dashboard</h2>
         <ul class="tab_cat_02">
-            <li v-for="menu in manageMenu" :key="menu.key" :class="{ active: menu.isActive }" @click="selectAdminTab(menu.key)">
-                <router-link to="/manage/products">{{ menu.name }}</router-link>
+            <li v-for="menu in manageMenuList" :key="menu.key" :class="{ active: menu.is_active }" @click="selectAdminTab(menu.key)">
+                <router-link :to="menu.path">{{ menu?.label }}</router-link>
             </li>
         </ul>
+
         <div class="flex_center">
-            <h3 class="fl text-center fs-30 pd-20">{{ manageMenu[selectTab].name }}</h3>
-            <router-view></router-view>
+            <h3 class="manage-title">{{ activeMenu?.label }}</h3>
+            <Suspense>
+                <router-view></router-view>
+            </Suspense>
         </div>
 
     </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
-interface IManageMenu {
-    key : number,
-    name : string,
-    isActive : boolean,
-    label : string, 
-}
+import { IMenu } from "@/store/menuList";
+import { getItemWithExpireTime } from "@/utils/common";
+import { computed, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "vuex";
+
 
 const route = useRoute();
-const selectTab = ref(1);
+const router = useRouter();
+const store = useStore();
 const subPath = computed(() => route.path.split("/")[2]);
-const manageMenu : IManageMenu[] = [
-    { key : 1 , name : "상품/재고 관리" , isActive : false , label : "products"},
-    { key : 2 , name : "주문/결제 관리" , isActive : false , label : "orders"},
-    { key : 3 , name : "사용자 관리"    , isActive : false , label : "users"},
-]
+const activeMenu = computed(() => store.getters["menuList/activeMenu"]);
+const manageMenuList = computed(()=>{
+    if (getItemWithExpireTime("userInfoObj")?.is_admin) {
+    return store.getters["menuList/adminMenuList"];
+  } else  {
+    return store.getters["menuList/sellerMenuList"];
+  } 
+});
+const isAdmin = computed(()=>getItemWithExpireTime("userInfoObj")?.is_admin);
+const isSeller = computed(()=>getItemWithExpireTime("userInfoObj")?.is_seller);
 
 const selectAdminTab = (key : number) => {
-    selectTab.value = key;
-    manageMenu.map(item=>{
-        item.isActive = key === item.key;
-    })
+    store.commit("menuList/setActiveMenu", key);
 };
-// created
-manageMenu.map((item)=>{
-    if( item.label === subPath.value ) selectAdminTab(item.key);
+
+onMounted(()=>{
+    if(!isAdmin.value && !isSeller.value) {
+        router.push("/");
+        return;
+    }
+    manageMenuList.value.map((item : IMenu)=>{
+    const path = `${item.path && item.path.split("/")[2]}`;
+    if( path === subPath.value ) selectAdminTab(item.key);
+});
+
 });
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@use '@/assets/scss/pages/manage' as manage;
+</style>

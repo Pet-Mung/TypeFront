@@ -15,12 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-if="displayedPosts.length == 0">
-                <td colspan="10" class="no_data_table">
-                    <img src="@/assets/img/common/nodata_icon.png" alt="no_data" />
-                    <p>데이터가 없습니다.</p>
-                </td>
-            </tr>
+            <ComnNodata :list="displayedPosts" :isTable="true" />
             <tr v-for="userInfo in displayedPosts" :key="userInfo.id">
                 <td>{{ userInfo.id }}</td>
                 <td>{{ userInfo.user_name }}</td>
@@ -50,7 +45,6 @@
     <paging-view 
       :currentPage="currentPage" 
       :totalPages="totalPages" 
-      :isEmpty="isEmpty" 
       @changePage="changePage" />
     <modal-confirm 
       :isVisible="dialog.isVisible" 
@@ -68,12 +62,12 @@
 import api from "@/api/apiUser";
 import PagingView from "@/components/common/ComnPaging.vue";
 import { IExtendUser } from "@/types/user";
-import { pagingFn } from "@/utils/common";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import ModalConfirm from "@/components/modal/ModalConfirm.vue";
 import ModalAlert from "@/components/modal/ModalAlert.vue";
+import ComnNodata from "@/components/common/ComnNodata.vue";
 const store = useStore();
 const router = useRouter();
 const usersInfo = ref<IExtendUser[]>([]);
@@ -85,7 +79,6 @@ const dialog = ref({
 const deleteId = ref(0);
 const currentPage = ref(1); //현재 페이지 번호
 const postsperPage = 5; //한 페이지에 보여줄 게시글 갯수
-const isEmpty = ref(false); //데이터 빈 값 여부
 const totalPages = computed(() => {
     //총 페이지 수
     return Math.ceil(usersInfo.value.length / postsperPage);
@@ -122,8 +115,8 @@ const deleteInfo = (id: number) => {
 };
 
 //페이지 변경
-const changePage = (str: string | number) => {
-    currentPage.value = pagingFn(currentPage.value, str);
+const changePage = (page: number) => {
+    currentPage.value = page;
 };
 const closeDialogHandler = (key: number) => {
     if (key) {

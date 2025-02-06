@@ -1,23 +1,6 @@
 @import "@/assets/scss/comn/mixin";
 // listView
-.table-bordered .no_data_table {
-  font-weight: 700;
-  padding: 100px 0;
-  img {
-    width: 100px;
-  }
-}
-.no_data {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  height: 50vh;
 
-  img {
-    width: 50px;
-  }
-}
 .list_style {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4열 그리드 */
@@ -78,8 +61,9 @@
 form.product-form {
   width: 100%;
   .btn_type_01 {
-    width: 100%;
-    max-width: 600px;
+    width: fit-content;
+    height: auto;
+    padding: 15px 20px;
     margin: 30px 0;
   }
 }
@@ -158,7 +142,6 @@ form.product-form {
       color: #fff;
       margin: 20px 0px;
       padding: 10px 20px;
-      border-radius: 10px;
       &:first-child {
         margin-right: 5px;
       }
@@ -197,7 +180,7 @@ form.product-form {
 }
 .caution_box {
   background-color: #dbdbdb;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 20px;
   dd {
     position: relative;
@@ -214,6 +197,8 @@ form.product-form {
   padding: 40px 20px;
   word-break: break-word;
 }
+
+
 
 // 태블릿에서 노트북
 @include desktopToTablet {

@@ -15,3 +15,7 @@ declare module 'vue3-carousel' {
   const Slide: DefineComponent<any, any, any>;
   export { Carousel, Slide };
 }
+declare module "*.png" {
+  const value: string;
+  export default value;
+}

@@ -4,8 +4,9 @@
         <div class="flex_center row mb-30">
             <Slider :flag="flag" :sliderData="product.image" />
             <div class="detail_cont">
-                <p class="fs-18 mb-10">
-                    {{ product.animal_category }} {{ product.category }} /
+                <p class="fs-18 mb-10 category_txt">
+                    <span :class="product.animal_category ==='강아지' ? 'dog' : 'cat'">#{{ product.animal_category }}</span> 
+                    <span :class="categoryKey(product.category)">#{{ product.category }}</span> /
                     {{ product.user_name }}
                 </p>
                 <p class="fs-30 mb-10">{{ product.name }}</p>
@@ -45,12 +46,12 @@
             </div>
         </div>
         <div class="detail_info">
-            <ul class="tab_cat_03">
+            <!-- <ul class="tab_cat_03">
                 <li :class="{ active: selectTab == 1 }">상세정보</li>
                 <li>리뷰</li>
                 <li>상품Q&A</li>
                 <li>판매자 정보</li>
-            </ul>
+            </ul> -->
             <div class="detail_info_wrap ql-editor">
                 <div v-html="product.content"></div>
             </div>
@@ -61,7 +62,7 @@
 import Slider from "@/components/common/ComnSlider.vue";
 import productApi from "@/api/apiProduct";
 import { computed, ref } from "vue";
-import { commonNumber } from "@/utils/common";
+import { categoryKey, commonNumber } from "@/utils/common";
 import { IProductResult } from "@/types/product";
 const productId = computed(() => window.sessionStorage.getItem("productId"));
 const product = ref<IProductResult>({

@@ -1,7 +1,13 @@
+import { IErrorStore } from '@/store/error';
+import { IMenuListStore } from '@/store/menuList';
+import { IProductStore } from '@/store/product';
 import { IUserStore } from '@/store/user'; 
 
 export interface RootState {
   login: IUserStore; 
+  product: IProductStore;
+  error: IErrorStore;
+  menuList: IMenuListStore;
 }
 export interface IBanner{
   backgroundImage : string,

@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
-
+import UserMypage from "@/pages/user/UserMypage.vue";
+import user from "@/pages/user/index.vue";
 const routes: Array<RouteRecordRaw> = [
   // 메인 페이지
   {
@@ -36,6 +37,8 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/user",
     component: () => import("@/pages/user/index.vue"),
+    redirect:"/user/mypage",
+    props: true,
     children: [
       { path: "mypage", component: () => import("@/pages/user/UserMypage.vue") },
       { path: "delivery", component: () => import("@/pages/user/UserDelivery.vue") },
@@ -48,6 +51,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/manage",
     component: () => import("@/pages/manage/index.vue"),
+    redirect:"/manage/products",
     children: [
       { path: "orders", component: () => import("@/pages/manage/ManageOrders.vue") },
       {
@@ -59,15 +63,14 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "users",
-        // component: ManageUsers,
-        children: [
-          { path: "", component: () => import("@/pages/manage/ManageUser.vue") },
-          { path: "profile", component: () => import("@/pages/user/UserProfile.vue") },
-        ],
+        component: () => import("@/pages/manage/ManageUser.vue")
+      },
+      {
+        path: "users/profile",
+        component: () => import("@/pages/user/UserProfile.vue"),
       },
     ],
-  },
-
+  }, 
   // icon 저작권 페이지
   {
     path: "/icons",

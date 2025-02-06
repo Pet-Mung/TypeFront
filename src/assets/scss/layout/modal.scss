@@ -23,15 +23,6 @@
   border-radius: 15px;
   z-index: 1059;
   cursor: auto;
-  /* 큰 사이즈 */
-  &.mo_L {
-    max-width: 800px;
-  }
-  /* 작은 사이즈 */
-  &.mo_S {
-    max-width: 400px;
-    max-height: 500px;
-  }
 }
 .modal_title {
   position: fixed;

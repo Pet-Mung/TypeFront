@@ -24,7 +24,7 @@ const defaultMaxWidth = props.maxWidth || '100%';
 
 const body: HTMLBodyElement | null = document.querySelector('body');
 
-if (body) {
+if (body &&props.isVisible) {
     body.style.overflow = 'hidden';
 }
 const overlayClickHandler = () => {

@@ -19,12 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-if="basketInfo.length == 0">
-          <td colspan="10" class="no_data_table">
-            <img src="@/assets/img/common/nodata_icon.png" alt="no_data" />
-            <p>데이터가 없습니다.</p>
-          </td>
-        </tr>
+        <ComnNodata :list="basketInfo" :isTable="true" />
         <tr
           v-for="(item, index) in basketInfo"
           :key="index"
@@ -32,7 +27,7 @@
         >
           <td>
             <img
-              :src="imageCheck(item.product_image)"
+              v-lazy="item.product_image"
               :alt="item.product_name"
               class="pd-10"
             />
@@ -98,8 +93,9 @@
 </template>
 
 <script setup lang="ts">
-import { Basket } from "@/store/user";
-import { commonNumber, imageCheck } from "@/utils/common";
+// import { Basket } from "@/store/user";
+import ComnNodata from "@/components/common/ComnNodata.vue";
+import { commonNumber } from "@/utils/common";
 import { computed, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -126,10 +122,10 @@ const resultInfo = reactive({
 // 장바구니 목록 조회 api 호출
 const getBasketView = async () : Promise<void> => {
   await store.dispatch("user/getBasket");
-  basketInfo.value.forEach((el : Basket) => {
-    el.price = 1000;
-    allCheckList.value.push(`${el.id} ${el.price}`);
-  });
+  // basketInfo.value.forEach((el : Basket) => {
+  //   el.price = 1000;
+  //   allCheckList.value.push(`${el.id} ${el.price}`);
+  // });
 };
 // 장바구니 수정 api 호출
 // const putBasketView = async (info) => {

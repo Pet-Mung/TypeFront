@@ -76,6 +76,9 @@ export function sortData(data : IProductsResult[]) {
 export function imageCheck(imgSrc:string) {
   const file_regex = /(.*?)\.(jpg|jpeg|png|gif|bmp|pdf)$/;
   const base64_regex = /data:image\/(.+)[^"]/;
+  if (!imgSrc) {
+    return require("@/assets/img/default.png");
+  }
   if (file_regex.test(imgSrc) || base64_regex.test(imgSrc)) {
     return imgSrc;
   }
@@ -89,4 +92,39 @@ export function pagingFn (currPage : number, str : string | number) : number {
   else if (str == "next") return currPage + 1;
   else if(typeof str === "number") return str;
   return currPage;
+}
+
+export function numToStrMenu (num : number){
+  let str;
+  switch(num){
+    case 1 : str = "사료";
+    break;
+    case 2 : str = "간식";
+    break;
+    case 3 : str = "장난감";
+    break;
+    case 4 : str = "노즈워크";
+    break;
+    case 5 : str = "케어용품";
+    break;
+    case 6 : str = "계절상품";
+    break;
+    case 7 : str = "기타용품";
+    break;
+    default : str = "ALL";
+  }
+  return str;
+}
+
+export const categoryKey = (category : string) => {
+  switch(category){
+    case '사료' : return 'category_01';
+    case '간식' : return 'category_02';
+    case '장난감' : return 'category_03';
+    case '노즈워크' : return 'category_04';
+    case '케어용품' : return 'category_05';
+    case '계절상품' : return 'category_06';
+    case '기타용품' : return 'category_07';
+    default : return 'category_01'; 
+  }
 }

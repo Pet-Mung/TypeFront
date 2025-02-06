@@ -1,22 +1,35 @@
-import axios ,{ AxiosInstance, AxiosResponse }from "axios";
+import router from "@/router";
+import store from "@/store";
+import { getItemWithExpireTime } from "@/utils/common";
+import axios, { AxiosInstance } from "axios";
 
-export const API : AxiosInstance = axios.create({
-    baseURL: "http://127.0.0.1:8000/api/",
-    headers: {
-      Accept: "*/*",
-    },
+
+export const API: AxiosInstance = axios.create({
+  baseURL: process.env.VUE_APP_API_URL,
+  headers: {
+    Accept: "*/*",
+  },
+  timeout: 10000, //10초 
+});
+API.interceptors.request.use(async (config) => {
+  const token = getItemWithExpireTime('userInfoObj')?.access_token;
+
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  return config;
 });
 
-//api 요청이 있을때마다 header로 token 보내는 함수
- function setAuthToken(userId : string ,type : string) {
-  const AUTH_TOKEN = `${type} ${userId}`;
-  try {
-    API.defaults.headers.common["Authorization"] = AUTH_TOKEN;
-    console.log('aa',API.defaults.headers.common.Authorization);
-  } catch(error){
-    console.error(error);
+API.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const errorPayload = {
+
+      error: error.response || error,
+      path: router.currentRoute.value.path,
+    }
+    store.dispatch("error/handleApiError", errorPayload);
+    return Promise.reject(error);
   }
-}
-export default {
-  setAuthToken,
-}
+);

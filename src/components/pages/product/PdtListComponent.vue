@@ -1,26 +1,25 @@
 <template>
   <div>
-    <ul class="mb-30" v-if="props.list.length == 0">
-      <li class="no_data">
-        <img src="@/assets/img/common/nodata_icon.png" alt="no_data" />
-        <p>데이터가 없습니다.</p>
-      </li>
-    </ul>
-    <ul class="list_style">
+    <ComnNodata class="mb-30" :list="props.list" height="50vh"/>
+    <ul class="list_style"  >
       <li
         class="list_content pr"
         v-for="(item, index) in displayedPosts"
         :key="index"
       >
         <img
-          :src="imageCheck(item.thumbnail)"
+          v-lazy="item.thumbnail"
           :alt="item.name"
           class="pd-10"
           @click="clickProduct(item.id)"
+         
         />
         <div class="txt_wrap pd-10">
           <div @click="clickProduct(item.id)" class="txt_cursor">
-            <p class="mb-10">{{ item.animal_category }} {{ item.category }}</p>
+            <p class="mb-10 category_txt">
+              <span :class="item.animal_category ==='강아지' ? 'dog' : 'cat'">#{{ item.animal_category }}</span> 
+              <span :class="categoryKey(item.category)">#{{ item.category }}</span>
+            </p>
             <p class="mb-10 fb fs-18">{{ item.name }}</p>
           </div>
           <div class="txt_flex">
@@ -51,7 +50,6 @@
   <PagingView
     :currentPage="currentPage"
     :totalPages="totalPages"
-    :isEmpty="isEmpty"
     @changePage="changePage"
   />
 </template>
@@ -60,25 +58,23 @@
 import {
   getItemWithExpireTime,
   commonNumber,
-  imageCheck,
-  pagingFn,
+  categoryKey,
 } from "@/utils/common";
 import PagingView from "@/components/common/ComnPaging.vue";
-import { computed, defineProps, ref, watch } from "vue";
+import { computed, defineProps, ref, watch,} from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { IProductsResult } from "@/types/product";
 import { Basket } from "@/store/user";
+import ComnNodata from "@/components/common/ComnNodata.vue";
 const store = useStore();
 const router = useRouter();
 const props = defineProps<{
   list: IProductsResult[],
-  tabChange: number,
+  // tabChange: number,
 }>();
-
 let currentPage = ref(1); //현재 페이지 번호
-let postsperPage = 10; //한 페이지 게시글 갯수
-let isEmpty = ref(false); 
+let postsperPage = 10; //한 페이지 게시글 갯수 
 const totalPages = computed(() => {
   return Math.ceil(props.list.length / postsperPage);
 });
@@ -90,8 +86,8 @@ const displayedPosts = computed(() => {
   else return props.list.slice(startIndex, endIndex);
 });
 const isLogin = computed(() => {
-  const userId = getItemWithExpireTime("userInfoObj")?.userId;
-  if (userId !== null && userId !== undefined) return true;
+  const userId = getItemWithExpireTime("userInfoObj")?.user_id;
+  if (userId) return true;
   else return false;
 });
 const animalTab = computed(() => {
@@ -108,7 +104,6 @@ const user_idx = computed(() => {
 const getBasketView = async () : Promise<void> => {
   await store.dispatch("user/getBasket");
   // if (basketInfo.value.length >= 1) {
-  //   console.log('aa')
   //   basketInfo.value.forEach((basket) => {
   //     arr.value.filter((item) => {
   //       if (item.name == basket.product_name) {
@@ -152,18 +147,11 @@ const clickProduct = (id : number) => {
 };
 
 //페이지 변경
-const changePage = (str : string | number) => {
-  currentPage.value = pagingFn(currentPage.value,str);
+const changePage = (page : number) => {
+  currentPage.value = page;
 };
 
-// const selectListChange = (e,id) => {
 
-//   selectList.value.push(id);
-//   console.log(id);
-//   console.log(e,e);
-// }
-
-// created
 
 if (user_idx.value) getBasketView();
 
