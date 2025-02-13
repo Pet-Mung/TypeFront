@@ -162,7 +162,7 @@ button.confirm_btn {
    transition: 0.5s;
    background-size: 200% auto;
    color: white;            
-   box-shadow:   2.8px 2.8px 2.2px rgba(0, 0, 0, 0.3);
+   box-shadow:   2.8px 2.8px 2.2px rgba(0, 0, 0, 0.2);
    display: block;
    &:hover{
     background-position: right center; 
@@ -503,8 +503,8 @@ input[type="radio"]:disabled + label {
   text-align: center;
   padding: 20px 10px;
   background-color: #fff;
-  color: #1687ff;
-  border-right: 1px solid #b1d7ff;
+  color: #2e168d;
+  border-right: 1px solid #b6a7f1;
   font-size: 20px;
 }
 .tab_cat_03 li:last-child {
@@ -512,7 +512,7 @@ input[type="radio"]:disabled + label {
 }
 .tab_cat_03 li.active {
   font-weight: 700;
-  background-color: #1687ff;
+  background-color: #2e168d;
   color: #fff;
 }
 

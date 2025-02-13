@@ -16,11 +16,11 @@
         />
         <div class="txt_wrap pd-10">
           <div @click="clickProduct(item.id)" class="txt_cursor">
+            <p class="mb-10 fb fs-18">{{ item.name }}</p>
             <p class="mb-10 category_txt">
               <span :class="item.animal_category ==='강아지' ? 'dog' : 'cat'">#{{ item.animal_category }}</span> 
               <span :class="categoryKey(item.category)">#{{ item.category }}</span>
             </p>
-            <p class="mb-10 fb fs-18">{{ item.name }}</p>
           </div>
           <div class="txt_flex">
             <p>{{ commonNumber(item.price) }}<span>원</span></p>

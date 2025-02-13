@@ -140,7 +140,7 @@ const delBasketView = async (id : number) : Promise<void> => {
 
 //리스트 클릭시 프로덕트 상세페이지로
 const pdtDetailHandler  = (id : number) =>{
-  console.log(id);
+  console.log('ddddddddddddd')
 }
 
 await getBasketView();

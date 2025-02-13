@@ -2,7 +2,7 @@
   <div class="user_wrap">
     <div class="int-area">
       <input type="text" id="username" required v-model.trim="info.username" autocomplete="off" />
-      <label for="username">ID</label>
+      <label for="username">아이디</label>
     </div>
     <div class="int-area">
       <input type="password" id="userPw" required v-model.trim="info.password" />
@@ -63,7 +63,7 @@ if (loginSuccess.value) {
 // 로그인 로직 확인
 const loginCheck = async () => {
   if (info.username === "") {
-    dialog.value.content = "ID를 입력해 주세요.";
+    dialog.value.content = "아이디를 입력해 주세요.";
     dialog.value.isVisible = true;
     isCheck.isNotNm = true;
   } else if (info.password === "") {

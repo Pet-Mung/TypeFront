@@ -11,11 +11,11 @@
           <li :class="{ active: selectTab === 1 }" @click="selectTab = 1">아이디 찾기</li>
           <li :class="{ active: selectTab === 2 }" @click="selectTab = 2">비밀번호 찾기</li>
         </ul>
-        <div class="user_input" v-if="selectTab == 1">
+        <div class="user_input" v-if="selectTab == 2">
           <label for="userName">ID</label>
           <input type="text" id="userName" />
         </div>
-        <div class="user_input" v-if="selectTab == 2">
+        <div class="user_input" >
           <label for="userEmail">EMAIL</label>
           <input type="text" id="userEmail" />
         </div>

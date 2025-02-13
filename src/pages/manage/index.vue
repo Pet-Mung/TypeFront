@@ -7,7 +7,6 @@
         </ul>
 
         <div class="flex_center">
-            <h3 class="manage-title">{{ activeMenu?.label }}</h3>
             <Suspense>
                 <router-view></router-view>
             </Suspense>
@@ -18,7 +17,7 @@
 <script setup lang="ts">
 import { IMenu } from "@/store/menuList";
 import { getItemWithExpireTime } from "@/utils/common";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -27,7 +26,6 @@ const route = useRoute();
 const router = useRouter();
 const store = useStore();
 const subPath = computed(() => route.path.split("/")[2]);
-const activeMenu = computed(() => store.getters["menuList/activeMenu"]);
 const manageMenuList = computed(()=>{
     if (getItemWithExpireTime("userInfoObj")?.is_admin) {
     return store.getters["menuList/adminMenuList"];

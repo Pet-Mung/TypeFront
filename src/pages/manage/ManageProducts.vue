@@ -71,7 +71,6 @@ const displayedPosts = computed<IProductsResult[]>(() => {
 const getAllProduct = async (): Promise<void> => {
     try {
         const result: IProductsResult[] = await productApi.viewAllProduct(null);
-        console.log(result);
         if (isAdmin.value) {
             list.value = sortData(result);
         } else {

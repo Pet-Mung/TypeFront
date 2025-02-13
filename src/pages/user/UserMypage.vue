@@ -1,8 +1,7 @@
 <template>
   <div class="mypage_wrap">
-    <div class="pd-30 lect_type_01">
+    <div class="pd-30">
       <div class="cont_area">
-        <h2 class="fs-40 mb-30 fc-w">마이 페이지</h2>
         <div class="profile">
           <img src="@/assets/img/profile_icon.png" alt="프로필 아이콘" />
           <h3 class="fc-w ml-5 mr-15 pd-10 fs-30">
@@ -28,7 +27,8 @@
         <ComnNodata class="pd-30" :list="basketInfo" content="장바구니에 상품을 추가해주세요." />
       </div>
     </div>
-    <div class="pd-30 lect_type_02">
+    <div class="graient-line"></div>
+    <div class="pd-30">
       <div class="cont_area">
         <div class="title_s pd-10">
           <img src="@/assets/img/purchase_icon.png" alt="구매내역" />
@@ -39,11 +39,12 @@
         <ComnNodata class="pd-30" :list="basketInfo" content="지금 당장 구매해보세요!" />
       </div>
     </div>
+    <div class="graient-line"></div>
     <div class="pd-30">
       <div class="cont_area">
         <div class="title_s pd-10">
           <h4 class="fs-18 mlr-10">주문/배송조회</h4>
-          <button @click="router.push('delivery')" class="fb">배송 현황</button>
+          <button @click="deliveyHandler" class="fb">배송 현황</button>
         </div>
         <ul class="delivery_area">
           <li>
@@ -82,24 +83,38 @@
       </div>
     </div>
   </div>
+  <modal-alert 
+      :isVisible="dialog.isVisible" 
+      :isBtn="true" 
+      :content="dialog.content"
+      @closeDialogHandler="dialog.isVisible = false" />
+  <modal-confirm 
+      :isVisible="dialog.isConfirmVisible" 
+      :isBtn="true" 
+      :content="dialog.content"
+      @closeDialogHandler="closeDialogHandler" />
 </template>
 
 <script setup lang="ts">
 import api from "@/api/apiUser";
-import { computed, ref } from "vue";
 import SliderView from "@/components/common/ComnSlider.vue";
+import ComnNodata from "@/components/common/ComnNodata.vue";
+import ModalAlert from "@/components/modal/ModalAlert.vue";
+import ModalConfirm from "@/components/modal/ModalConfirm.vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { getItemWithExpireTime } from "@/utils/common";
 import { useStore } from "vuex";
 import { IExtendInfo, IPurchaseData } from "@/types/user";
-import ComnNodata from "@/components/common/ComnNodata.vue";
 
-interface IUserName {
-    user_name: string | undefined;
-}
 
 const store =useStore();
 const router = useRouter();
+const dialog = ref({
+    isVisible: false,
+    isConfirmVisible: false,
+    content: "",
+})
 const data = ref<IExtendInfo | null>(null);
 const flag = 1; // slider type
 const purchaseData  : IPurchaseData[] = [
@@ -138,7 +153,6 @@ const user_idx = computed(() => {
 const getUserInfo = async () => {
   try {
     const result = await api.getOnlyUser(user_idx.value);
-    console.log(result);
     data.value = result[0];
   } catch (error) {
     console.error(error);
@@ -150,12 +164,21 @@ const getBasketView = () => {
 
 
 const deleteUserInfo = () => {
-  if (confirm("정말 삭제하시겠습니까?") ==true){
+  dialog.value.isConfirmVisible = true;
+  dialog.value.content = "정말 삭제하시겠습니까?";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+}
+const closeDialogHandler = (payload : number) => {
+  dialog.value.isConfirmVisible = false;
+  if(payload === 1){
     store.dispatch('user/delUserInfo',user_idx.value);
     window.sessionStorage.clear();
     store.commit('login/setLoginStatus',false);
     router.push('/');
   }
+}
+
+const deliveyHandler = () => {
+  router.push('delivery')
 }
 getBasketView();
 getUserInfo();

@@ -11,10 +11,12 @@ export interface IMenu {
     is_active: boolean;
     path?:string;
     image? : string;
+    is_beta? : boolean;
 }
 export interface IMenuListStore {
     menu: IMenu[];
     subMenu: IMenu[];
+    detailMenu : IMenu[];
 }
 const menuList: Module<IMenuListStore, RootState> = {
     namespaced: true,
@@ -128,6 +130,32 @@ const menuList: Module<IMenuListStore, RootState> = {
                 image : dogImage
             }
         ],
+        detailMenu : [
+            {
+                key:0,
+                label: '상세정보',
+                is_active: true,
+                is_beta : false,
+            },
+            {
+                key:1,
+                label: '리뷰',
+                is_active: false,
+                is_beta : true,
+            },
+            {
+                key:2,
+                label: '상품Q&A',
+                is_active: false,
+                is_beta : true,
+            },
+            {
+                key:3,
+                label: '판매자 정보',
+                is_active: false,
+                is_beta : true,
+            }
+        ],
     }),
     mutations: {
         setActiveMenu : (state,payload : number) => {
@@ -137,6 +165,11 @@ const menuList: Module<IMenuListStore, RootState> = {
         },
         setActiveSubMenu : (state,payload) =>{
             state.subMenu.forEach((item)=>{
+                item.is_active = item.key === payload;
+            });
+        },
+        setActiveDetailMenu : (state,payload) =>{
+            state.detailMenu.forEach((item)=>{
                 item.is_active = item.key === payload;
             });
         },
@@ -170,6 +203,9 @@ const menuList: Module<IMenuListStore, RootState> = {
         },
         animalCategory : (state) => {
             return state.subMenu.map((item)=>item.label).slice(1);
+        },
+        detailMenuList :(state) => {
+            return state.detailMenu;
         }
     }
 }

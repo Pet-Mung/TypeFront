@@ -80,7 +80,7 @@
     <transition name="fade">
       <div class="confirm_box" v-if="isCheck.isNm">
         <p>숫자, 문자, 특수 문자를 포함하여 8자에서 12자 사이의 비밀번호를 입력해 주세요.</p>
-        <button type="button" class="confirm_btn" @click="isPwCheck">
+        <button type="button" class="btn_type_02" @click="isPwCheck">
           가입하기
         </button>
       </div>
@@ -206,3 +206,16 @@ const closeDialogHandler = () => {
   dialog.value.isVisible = false;
 }
 </script>
+<style lang="css" scoped>
+.confirm_btn{
+  border-radius: 6px;
+  height: 50px;
+  width: 120px;
+}
+.btn_type_02{
+  border-radius: 6px;
+  width: 100%;
+  max-width: 400px;
+
+}
+</style>
