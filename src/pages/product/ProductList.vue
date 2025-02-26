@@ -13,7 +13,7 @@
             </li>
         </ul>
     </div>
-    <pdt-list-component v-if="!isFetch" :list="products" />
+    <pdt-list-component v-if="!isFetch" :list="products" @fetchItems="fetchAllProducts" />
     <Spinner v-if="isFetch" :isFixed="true" /> 
 </template>
 
@@ -42,7 +42,7 @@ const subMenuList      = computed(() => store.getters["menuList/subMenuList"]);
 const activeMenu       = computed(() => store.getters["menuList/activeMenu"]);
 const activeSubMenu    = computed(() => store.getters["menuList/activeSubMenu"]);
 
-let result: IProductsResult[] = [];
+const result = ref<IProductsResult[]>([]);
 
 // 메인 메뉴 클릭 핸들러
 const handleMainMenuClick = (item: IMenu) => {
@@ -61,12 +61,12 @@ const handleSubMenuClick = async (num: number) => {
 };
 
 // 상품 정보 전체 조회 API 호출
-const fetchAllProducts = async (): Promise<void> => {
+const sortProducts = async (): Promise<void> => {
     try {
         isFetch.value = true;
         const filteredData = (activeMenu.value?.label === "ALL" || !activeMenu.value)
-            ? result
-            : result.filter(item => activeMenu.value.label === item.category);
+            ? result.value
+            : result.value.filter(item => activeMenu.value.label === item.category);
         originalProducts.value = sortData(filteredData);
         await handleSubMenuClick(activeSubMenu.value.key);
         await nextTick();
@@ -77,18 +77,18 @@ const fetchAllProducts = async (): Promise<void> => {
         console.error(error);
     }
 };
-
+const fetchAllProducts = async () => {
+    result.value = await productApi.viewAllProduct(userId.value);
+    await sortProducts();
+}
 watch(currentId, ()=>{
+    sortProducts();
+});
+
+onMounted(() => {
+    store.commit('menuList/setActiveMenu', Number(currentId.value) || 0);
+    store.commit('menuList/setActiveSubMenu', 0);
     fetchAllProducts();
 });
 
-onMounted(async () => {
-
-    store.commit('menuList/setActiveMenu', Number(currentId.value) || 0);
-    store.commit('menuList/setActiveSubMenu', 0);
-    
-    result = await productApi.viewAllProduct(userId.value);
-    await fetchAllProducts();
-
-});
 </script>

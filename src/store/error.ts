@@ -22,7 +22,6 @@ const error: Module<IErrorStore, RootState> = {
     actions : {
         handleApiError({commit}, payload){
             commit("setApiError",payload);
-            console.log('aa',payload);
         }
     }
 }

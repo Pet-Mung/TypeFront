@@ -20,29 +20,42 @@
           <input type="text" id="userEmail" />
         </div>
         <div class="confirm_box">
-          <button type="button" class="confirm_btn">
+          <button type="button" class="confirm_btn" @click="confirmClickHandler">
             확인
           </button>
         </div>
       </div>
     </div>
   </modal-frame>
-
+  <modal-alert 
+    :isVisible="dialog.isVisible" 
+    :isBtn="true" 
+    :content="dialog.content"
+    @closeDialogHandler="dialog.isVisible=false" />
 </template>
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
 import ModalFrame from '../ModalFrame.vue';
+import ModalAlert from "@/components/modal/ModalAlert.vue";
 import { ref } from 'vue';
+const emit = defineEmits(['closeDialogHandler']);
 const props = defineProps({
   isVisible: { type: Boolean },
   width: { type: String },
   height: { type: String },
   maxWidth: { type: String },
 });
-const emit = defineEmits(['closeDialogHandler']);
+const dialog = ref({
+    isVisible: false,
+    content: "",
+})
 const closeHandler = () => {
   emit('closeDialogHandler');
+}
+const confirmClickHandler = () =>{
+  dialog.value.isVisible = true;
+  dialog.value.content = "아직 준비중인 서비스입니다.";
 }
 const selectTab = ref(1);
 </script>

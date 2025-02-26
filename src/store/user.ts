@@ -5,11 +5,13 @@ import { RootState } from '@/types/index'
 import { ActionContext } from 'vuex';
 import { ILoginInfo, } from "@/types/user"
 export interface Basket {
-  id: string;
-  productId: number;
+  id: number;
+  productId?: number;
+  product_image?:string;
   product_name: string;
   count: number;
   price: number;
+  
 }
 export interface IUserStore {
   loginSuccess: boolean;
@@ -26,7 +28,7 @@ const user: Module<IUserStore, RootState> = {
     // flag 0 = 판매자, flag 1 = 구매자
     joinFlag: 1,
     basketInfo: [],
-    fetchStatus : 200,
+    fetchStatus : 0,
   }),
   mutations: {
     setLoginStatus(state: IUserStore, payload: boolean) {
@@ -38,6 +40,9 @@ const user: Module<IUserStore, RootState> = {
     // 장바구니 정보
     setBasketInfo(state: IUserStore, payload : Basket[]) {
       state.basketInfo = payload;
+      state.basketInfo.forEach((el : Basket) =>{
+        el.price = 1000;
+      });
     },
     //삭제 등 http status로 에러값 구별
     setFetchStatus(state: IUserStore, payload : number) {
@@ -85,7 +90,11 @@ const user: Module<IUserStore, RootState> = {
           addBasketInfo.productId,
           addBasketInfo.count
         );
-        // context.commit('setBasketInfo',result);
+        if(result){
+          context.commit("setFetchStatus",result.status);
+        }else{
+          context.commit("setFetchStatus",400);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -94,8 +103,10 @@ const user: Module<IUserStore, RootState> = {
     async delBasket(context: ActionContext<any, RootState>, basketId: number) {
       try {
         const result = await purchaseApi.deleteCart(basketId);
-        if (result.status == "404") {
-          alert(result.detail);
+        if(result){
+          context.commit("setFetchStatus",result.status);
+        }else{
+          context.commit("setFetchStatus",400);
         }
       } catch (error) {
         console.error(error);

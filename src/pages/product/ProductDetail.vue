@@ -2,12 +2,12 @@
     <div class="detail_wrap">
         <h3 class="pd-20 fs-20">상품 상세정보</h3>
         <div class="flex_center row mb-30">
-            <Slider :flag="flag" :sliderData="product.image" />
+            <Slider :flag="2" :sliderData="product.image.map(img => ({ image: img }))" />
             <div class="detail_cont">
                 <p class="mb-10 category_txt">
                     <span :class="product.animal_category === '강아지' ? 'dog' : 'cat'">#{{ product.animal_category
                         }}</span>
-                    <span :class="categoryKey(product.category)">#{{ product.category }}</span> /
+                    <span :class="categoryKey(product.category)">#{{ product.category }}</span> 판매자 :
                     {{ product.user_name }}
                 </p>
                 <p class="fs-30 mb-10">{{ product.name }}</p>
@@ -39,8 +39,8 @@
                     <p><span class="fb fs-30 mlr-5 txt-strong">{{ commonNumber(orderCount + deliveryCount) }}</span> 원</p>
                 </div>
                 <div class="btn_wrap">
-                    <button type="button">장바구니</button>
-                    <button type="button">구매하기</button>
+                    <button type="button" @click="handleAddCart">장바구니</button>
+                    <button type="button" @click="handlePurchase">구매하기</button>
                 </div>
                 <div class="caution_box">
                     <dl>
@@ -65,24 +65,33 @@
             </div>
         </div>
     </div>
+    <modal-confirm 
+      :isVisible="dialog.isConfirmVisible" 
+      :content="dialog.content" 
+      @closeDialogHandler="closeDialogHandler" />
     <modal-alert :isVisible="dialog.isVisible" :isBtn="true" :content="dialog.content"
         @closeDialogHandler="closeDialogHandler" />
 </template>
 <script setup lang="ts">
 import Slider from "@/components/common/ComnSlider.vue";
 import ModalAlert from "@/components/modal/ModalAlert.vue";
+import ModalConfirm from "@/components/modal/ModalConfirm.vue";
 import productApi from "@/api/apiProduct";
 import { computed, ref } from "vue";
-import { categoryKey, commonNumber } from "@/utils/common";
+import { categoryKey, commonNumber, getItemWithExpireTime } from "@/utils/common";
 import { IProductResult } from "@/types/product";
 import { useStore } from "vuex";
 import { IMenu } from "@/store/menuList";
+import { useRoute, useRouter } from "vue-router";
 const store = useStore();
+const route = useRoute();
+const router = useRouter();
 const dialog = ref({
     isVisible: false,
+    isConfirmVisible: false,
     content: "",
 })
-const productId = computed(() => window.sessionStorage.getItem("productId"));
+const productId = computed(() => route.params.id);
 const detailMenuList = computed(() => store.getters["menuList/detailMenuList"]);
 const product = ref<IProductResult>({
     image: [],
@@ -91,17 +100,17 @@ const product = ref<IProductResult>({
     user_name: '',
     name: '',
     price: 0,
+    is_cart: false,
 });
 const count = ref(1); // 구매갯수
 const orderCount = computed(() => product.value.price * count.value);
 const deliveryCount = computed(() => (orderCount.value >= 50000 ? 0 : 3000));
-let flag = 2; // slider type 2
-
-
+const isLogin = computed(()=>{return getItemWithExpireTime("userInfoObj")?.user_id ? true : false})
+const fetchStatus = computed(() => store.state.user.fetchStatus);
 //상품 정보 개별 조회 api 호출
 const getOnlyProduct = async (): Promise<void> => {
     try {
-        const result: IProductResult | null = await productApi.viewIndividualProduct(productId.value || "");
+        const result: IProductResult | null = await productApi.viewIndividualProduct(String(productId.value) || "");
         if (result) product.value = result;
     } catch (error) {
         console.error(error);
@@ -109,16 +118,64 @@ const getOnlyProduct = async (): Promise<void> => {
 };
 
 const handleTabClick = (menu: IMenu) => {
+    if(!isLogin.value){
+        dialog.value.isVisible = true;
+        dialog.value.content = "로그인 후 이용가능합니다.";
+        return;
+    }
     if (menu.is_beta) {
         dialog.value.isVisible = true;
-        dialog.value.content = "아직 준비중입니다.";
+        dialog.value.content = "아직 준비중인 서비스입니다.";
         return;
     }
     store.commit("menuList/setActiveDetailMenu", menu.key);
 }
 
-const closeDialogHandler = () => {
+const handleAddCart = async () => {
+    //장바구니
+    if(isLogin.value){
+        if(product.value.is_cart){
+            dialog.value.content = "장바구니에 이미 담긴 상품입니다.<br/> 확인하러 가겠습니까?"
+            dialog.value.isConfirmVisible = true;
+        }else{
+            await store.dispatch("user/addBasket", {
+                productId : productId.value,
+                count : count.value,
+            });
+            if(fetchStatus.value === 200){
+                dialog.value.content = "장바구니에 담았습니다.";
+            }else{
+              dialog.value.content = "실패하였습니다. 다시 시도해주세요.";
+            }
+            dialog.value.isVisible = true;
+        }
+    }else{
+        dialog.value.isVisible = true;
+        dialog.value.content = "로그인 후 이용가능합니다.";
+    }
+}
+const handlePurchase = () => {
+    if(isLogin.value){
+        router.push("/user/");
+    }else{
+        dialog.value.isVisible = true;
+        dialog.value.content = "로그인 후 이용가능합니다.";
+    }
+}
+const closeDialogHandler = (payload : null | number) => {
     dialog.value.isVisible = false;
+    dialog.value.isConfirmVisible = false;
+    if(!isLogin.value){
+        router.push("/login");
+        return;
+    }
+    if(dialog.value.isConfirmVisible && payload){
+        router.push("/user/");
+        return;
+    }
+    if(fetchStatus.value === 200){
+        getOnlyProduct();
+    }
 }
 
 //created

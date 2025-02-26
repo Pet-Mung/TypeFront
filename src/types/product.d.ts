@@ -8,9 +8,10 @@ export interface IProductsResult {
     category: string,
     price: number,
     id : number,
-    isCart? : boolean,
+    is_cart? : boolean,
     updatedNumA? : number,
     updatedNumB? : number,
+    basket_id? : number,
 }
 
 export interface IProductResult {
@@ -22,6 +23,7 @@ export interface IProductResult {
     price: number,
     content?: string,
     count? : number,
+    is_cart? : boolean,
 }
 
 export interface IPostProduct {

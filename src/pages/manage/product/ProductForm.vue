@@ -37,7 +37,7 @@
         <div class="pdt_input">
             <label for="image">대표 이미지 첨부</label>
             <div class="custom-file">
-                <input id="customFile" type="file" @change="readInputFile" multiple />
+                <input id="customFile" type="file" accept="image/*" @change="readInputFile" multiple />
             </div>
         </div>
         <div id="imagePreview" ref="imagePreview" class="image_preview">
@@ -46,8 +46,11 @@
         <div class="pdt_input diff_input">
             <label for="content">상품 설명</label>
         </div>
-        <quill-editor :value="product.content" :options="state.editorOption" @change="onEditorChange($event)">
-        </quill-editor>
+        <div style="background:#fff">
+            <quill-editor :value="product.content" :options="state.editorOption" @change="onEditorChange($event)">
+            </quill-editor>
+        </div>
+
         <div class="flex_center">
             <button type="submit" class="btn_type_02">상품 등록하기</button>
         </div>

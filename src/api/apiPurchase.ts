@@ -16,13 +16,12 @@ const viewCart = async () => {
 const addCart = async (productId : number, count : number) => {
   try {
     const response = await API.post(`basket?product_id=${productId}&count=${count}`);
-    return response.data;
+    return response;
   } catch (error) {
         const err = error as AxiosError;
         if (err.response) {
-            const data = err.response.data as ApiResponse;
             if (err.response.status === 400) {
-                alert(data.detail)
+                return err.response;
             } 
         }
   }
@@ -32,9 +31,14 @@ const addCart = async (productId : number, count : number) => {
 const deleteCart = async (basket_id : number) => {
   try {
     const response = await API.delete(`basket?basket_id=${basket_id}`);
-    return response.data;
+    return response;
   } catch (error) {
-    console.error(error);
+    const err = error as AxiosError;
+        if (err.response) {
+            if (err.response.status === 400) {
+                return err.response;
+            } 
+        }
   }
 };
 

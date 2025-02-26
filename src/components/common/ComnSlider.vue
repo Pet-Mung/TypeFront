@@ -4,8 +4,11 @@
       <Slide class="" v-for="(slide,idx) in transformSliderData" :key="idx">
         <div class="carousel__item">
           <img v-lazy="slide.image || ''" :alt="slide.name" class="slide_img" />
-          <p>{{ slide.name || slide.product_name }}</p>
+          <div>
+            <p>{{ slide.name || slide.product_name }}</p>
           <p class="fs-15 mt-10">{{ slide.count }} 개</p>
+          </div>
+
         </div>
       </Slide>
       <template #addons>
@@ -66,8 +69,9 @@ const transformSliderData = computed<IImage[]>(()=>{
     image : item.image || item.product_image || '',
     name : item.name || item.product_name || 'image',
     count :item.count || 0
-  }))
+  }));
 });
+
 const lenChk = computed(() => {
   return transformSliderData.value.length > 1 ? true : false;
 });
@@ -108,4 +112,7 @@ const breakpoints = {
 /* .carousel__item{
   background : var(--bg);
 } */
+.carousel__item{
+  height: 100%;
+}
 </style>

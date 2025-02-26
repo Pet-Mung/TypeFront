@@ -78,7 +78,7 @@ const dialog = ref({
 })
 const deleteId = ref(0);
 const currentPage = ref(1); //현재 페이지 번호
-const postsperPage = 5; //한 페이지에 보여줄 게시글 갯수
+const postsperPage = 10; //한 페이지에 보여줄 게시글 갯수
 const totalPages = computed(() => {
     //총 페이지 수
     return Math.ceil(usersInfo.value.length / postsperPage);

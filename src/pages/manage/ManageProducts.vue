@@ -51,7 +51,7 @@ import ComnNodata from "@/components/common/ComnNodata.vue";
 const router = useRouter();
 const list = ref<IProductsResult[]>([]);
 const currentPage = ref(1); //현재 페이지 번호
-const postsperPage = 5; //한 페이지에 보여줄 게시글 갯수
+const postsperPage = 10; //한 페이지에 보여줄 게시글 갯수
 const isAdmin = computed(() => getItemWithExpireTime("userInfoObj")?.is_admin);
 const username = computed(() => getItemWithExpireTime("userInfoObj")?.username);
 const totalPages = computed(() => {

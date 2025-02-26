@@ -33,7 +33,7 @@
         <div class="title_s pd-10">
           <img src="@/assets/img/purchase_icon.png" alt="구매내역" />
           <h4 class="fs-18 mlr-10">구매내역</h4>
-          <button @click="router.push('purchase')" class="fb" v-if="basketInfo.length > 0">더 보기 +</button>
+          <button @click="isBetaHandler" class="fb" v-if="basketInfo.length > 0">더 보기 +</button>
         </div>
         <SliderView :flag="flag" :sliderData="purchaseData"  v-if="basketInfo.length > 0"/>
         <ComnNodata class="pd-30" :list="basketInfo" content="지금 당장 구매해보세요!" />
@@ -44,7 +44,7 @@
       <div class="cont_area">
         <div class="title_s pd-10">
           <h4 class="fs-18 mlr-10">주문/배송조회</h4>
-          <button @click="deliveyHandler" class="fb">배송 현황</button>
+          <button @click="isBetaHandler" class="fb">배송 현황</button>
         </div>
         <ul class="delivery_area">
           <li>
@@ -177,8 +177,10 @@ const closeDialogHandler = (payload : number) => {
   }
 }
 
-const deliveyHandler = () => {
-  router.push('delivery')
+const isBetaHandler = () => {
+  dialog.value.content = "아직 준비중인 서비스입니다.";
+  dialog.value.isVisible = true;
+  // router.push('delivery')
 }
 getBasketView();
 getUserInfo();

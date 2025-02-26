@@ -13,9 +13,9 @@
     align-items: flex-start;
     justify-content: center;
     transition: all 0.2s ease-in-out;
-    border: 1px solid #ebe6de;
+    // border: 1px solid #ebe6de;
     background-color: #fff;
-    border-radius: 8px;
+    // border-radius: 8px;
     &:hover{
       scale:1.05;
       transform: translateY(-10px);
@@ -31,7 +31,7 @@
     }
     .txt_wrap {
       width: 100%;
-      border-top: 1px solid #e1e1e1;
+      // border-top: 1px solid #e1e1e1;
       .txt_cursor{
         cursor: pointer;
       }
@@ -45,10 +45,14 @@
         img {
           width: 20px;
         }
+        &.del-cart{
+          background-color: #8b8b8b;
+        }
       }
       .txt_flex {
         display: flex;
         justify-content: space-between;
+        flex-direction: row-reverse;
         align-items: center;
 
       }
