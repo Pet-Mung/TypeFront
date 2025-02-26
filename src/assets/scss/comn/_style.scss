@@ -370,7 +370,7 @@ textarea:focus {
   border: solid 1px var(--primary-color);
 }
 
-/* input[type="checkbox"] {
+ input[type="checkbox"] {
     display: none;
   }
   input[type="checkbox"] + label {
@@ -378,18 +378,19 @@ textarea:focus {
     display: inline-block;
     padding-left: 28px;
     line-height: 24px;
-    background: url("../images/icon_check_off.png") 0 center no-repeat;
+    background: url("@/assets/img/common/radio_off.png") 0 center no-repeat;
     background-size: 20px 20px;
     cursor: pointer;
+    text-indent: -9999px;
   }
   input[type="checkbox"]:checked + label {
-    background-image: url("../images/icon_check_on.png");
+    background-image: url("@/assets/img/common/radio_on.png");
   }
   input[type="checkbox"]:disabled + label {
-    background-image: url("../images/icon_check_disabled.png");
+    background-image: url("@/assets/img/common/radio_off.png");
     opacity: 0.5;
   }
-   */
+   
 input[type="radio"] {
   display: none;
 }

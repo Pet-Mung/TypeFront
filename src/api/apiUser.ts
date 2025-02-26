@@ -72,7 +72,12 @@ const putOnlyUser = async (user_id: string, info : IProfile) => {
     try {
         const response = await API.put(`user/${user_id}`, info);
         return response.data;
-    } catch (error) {
+    } catch (error : any) {
+        if(error.response.data.detail.includes('user.user_name')){
+            return {errorMsg : "중복된 아이디입니다."}
+        }else if(error.response.data.detail.includes('userinfo.phone_number')){
+            return {errorMsg : "중복된 핸드폰번호입니다."}
+        }
         console.error(error);
     }
 }

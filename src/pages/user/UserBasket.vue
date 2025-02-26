@@ -12,8 +12,10 @@
               class="cart_chkBox"
               type="checkbox"
               value="all"
+              id="allCheck"
               v-model="allSelectList"
             />
+            <label for="allCheck">all</label>
           </th>
         </tr>
       </thead>
@@ -54,8 +56,10 @@
               type="checkbox"
               :value="{ id: item.id, price: item.price, count: item.count }"
               v-model="selectList"
+              :id="item.id"
               @click.stop
             />
+            <label :for="item.id" @click.stop>{{item.id}}</label>
             <button
               type="button"
               class="del_try_btn"

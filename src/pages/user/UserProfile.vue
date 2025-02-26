@@ -3,7 +3,7 @@
     <!-- email -->
     <div class="user_input">
       <label for="userEmail">이메일</label>
-      <input type="text" id="userEmail" v-model.trim="info.email" />
+      <input type="text" id="userEmail" :value="info.email" readonly disabled />
     </div>
 
     <!-- name -->
@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 import api from "@/api/apiUser";
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, onMounted } from "vue";
 import {
   emailCheck,
   getItemWithExpireTime,
@@ -139,7 +139,9 @@ const putUserInfo = async () : Promise<void> => {
     if (result.status === "200") {
       dialog.value.content = "수정이 완료되었습니다.";
       modifySuccess.value = true;
-    } 
+    } else{
+      dialog.value.content = result.errorMsg;
+    }
     dialog.value.isVisible = true;
   } catch (error : any) {
     if(error.response?.status === 404){
@@ -189,8 +191,8 @@ const modifyBtn = () : void => {
       originInfo.value.email == info.email &&
       originInfo.value.phone_number == info.phone_number &&
       originInfo.value.address?.split("&")[0] == info.address &&
-      originInfo.value.address?.split("&")[1] == info.detail_address
-      // originInfo.value.is_admin == info.is_admin 
+      originInfo.value.address?.split("&")[1] == info.detail_address &&
+      originInfo.value.is_admin == info.is_admin 
     ) {
       modifyBool.value = false;
     } else modifyBool.value = true;
@@ -238,6 +240,8 @@ const closeDialogHandler = () => {
       else router.push("mypage");
     }
 }
+onMounted(async ()=>{
+  await getUserInfo();
+});
 
-await getUserInfo();
 </script>
