@@ -21,5 +21,10 @@ export interface IImage{
   product_image? : string,
   product_name? : string,
   name? : string,
-  count? : number
+  count? : number,
+  price? : number,
+  animal_category? :string,
+  category? :string,
+  id? :number,
+  is_active? : boolean,
 }

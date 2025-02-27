@@ -38,13 +38,31 @@
     <Carousel v-bind="settings" :wrapAround=true :mouseDrag=true :touchDrag=true>
       <Slide class="" v-for="(slide, idx) in transformSliderData" :key="idx" :style="{ padding: 0 }">
         <div class="carousel__item banner__item" :style="{ backgroundColor: slide.color }">
-          <img :src="slide.backgroundImage" :alt="String(idx)" class="slide_img" />
+          <img :src="slide.backgroundImage" :alt="String(idx)" class="slide_img not" />
           <!-- <p>{{ slide.title }}</p> -->
           <!-- <p>{{ slide.content }}</p> -->
         </div>
       </Slide>
       <template #addons>
         <Navigation v-if="transformSliderData.length > 1" />
+      </template>
+    </Carousel>
+  </div>
+  <!-- 여기꺼 배열 바꿔야대 .image로 넣을 수있게 -->
+  <div v-if="props.flag == 4">
+    <Carousel v-bind="settingmain">
+      <Slide class="" v-for="(slide,idx) in transformSliderData" :key="idx">
+        <div class="carousel__item">
+          <img v-lazy="slide.image || ''" :alt="slide.name" class="slide_img" />
+          <div>
+            <p>{{ slide.name || slide.product_name }}</p>
+          <p class="fs-15 mt-10">{{ slide.price }} 원</p>
+          </div>
+
+        </div>
+      </Slide>
+      <template #addons>
+        <Navigation v-if="transformSliderData.length > 8" />
       </template>
     </Carousel>
   </div>
@@ -89,6 +107,12 @@ const settings = {
   snapAlign: "center",
   // autoplay: 5000,
 };
+//main page second slide setting
+const settingmain = {
+  itemsToShow: 4,
+  snapAlign: "center",
+  // autoplay: 5000,
+};
 const breakpoints = {
   // 500px and up
   500: {
@@ -114,5 +138,8 @@ const breakpoints = {
 } */
 .carousel__item{
   height: 100%;
+}
+.slide_img.not{
+  aspect-ratio:initial;
 }
 </style>

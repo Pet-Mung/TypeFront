@@ -5,8 +5,8 @@
                 <th>Idx</th>
                 <th>아이디</th>
                 <th>이메일</th>
-                <th>만든 날짜</th>
-                <th>수정한 날짜</th>
+                <th>생성일</th>
+                <th>수정일</th>
                 <th>주소</th>
                 <th>전화번호</th>
                 <th>활동여부</th>
