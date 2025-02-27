@@ -13,7 +13,7 @@
       <h3 class="animate__animated animate__bounce">회원가입하고 특별한 할인 혜택을 받자!! <span
           class="animate__animated animate__flash animate__infinite" @click="router.push('/join')">CLICK</span></h3>
     </section>
-    <section class="main-section top-section animate__animated animate__fadeInUp">
+    <section v-if="productList.length === 5" class="main-section top-section animate__animated animate__fadeInUp">
       <h3>WEEKLY TOP5</h3>
       <!-- <ComnSlider :flag="4" :sliderData="productList" /> -->
       <ul class="top-list">

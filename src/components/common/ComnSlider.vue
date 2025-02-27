@@ -105,7 +105,7 @@ const setting = {
 const settings = {
   itemsToShow: 1,
   snapAlign: "center",
-  // autoplay: 5000,
+  autoplay: 5000,
 };
 //main page second slide setting
 const settingmain = {
