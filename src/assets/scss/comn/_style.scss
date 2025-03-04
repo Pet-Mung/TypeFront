@@ -204,18 +204,9 @@ button.confirm_btn {
   transition: all 0.5s linear;
   transform: translateY(0);
 }
-.manage-title{
-  font-family: (--pretend-font) !important;
-  font-weight: 400;
-  text-align: left;
-  width: 100%;
-  max-width: 1000px;
-  padding-bottom: 20px;
-  font-size: 16px;
-}
 /* table------------------------------------------------------*/
 .table {
-  min-width: 1000px;
+  min-width: 1200px;
 }
 .table *{
   font-family: (--pretend-font) !important;
