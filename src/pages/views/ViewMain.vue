@@ -86,7 +86,6 @@ const isLogin = computed(() => {
 const fetchAllProducts = async () => {
   const result = await productApi.viewAllProduct(0);
   const topList = result.slice(0, 5);
-  console.log(topList);
   productList.value = topList.map((item) => ({
     price: item.price,
     product_image: item.thumbnail,
@@ -96,7 +95,6 @@ const fetchAllProducts = async () => {
     id: item.id,
     is_active: false,
   }))
-  console.log(productList.value);
 }
 const sellItemHandler = (id = 0) => {
   router.push(`products/detail/${id}`);

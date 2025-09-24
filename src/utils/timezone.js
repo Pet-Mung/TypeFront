@@ -212,7 +212,7 @@ function getTimeZone(regionCode) {
     const hour = formattedParts.find((part) => part.type === "hour").value.padStart(2, "0");
     const minute = formattedParts.find((part) => part.type === "minute").value.padStart(2, "0");
   
-    console.log(`${year}.${month}.${day} ${hour}:${minute} `);
+    // console.log(`${year}.${month}.${day} ${hour}:${minute} `);
     if (type == 0) {
       let changeDate = `${year}.${month}.${day} ${hour}:00 `;
       return changeDate;
